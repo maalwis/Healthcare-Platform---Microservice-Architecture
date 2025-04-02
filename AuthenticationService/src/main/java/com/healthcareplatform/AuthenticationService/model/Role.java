@@ -17,9 +17,6 @@ public class Role {
     @Column(nullable = false, unique = true)
     private RoleEnum role;
 
-    // Optional: Additional description if needed
-    @Column
-    private String roleDescription;
 
     // Mapping to user roles (many-to-many via the UserRole mapping table)
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -43,14 +40,6 @@ public class Role {
 
     public void setRole(RoleEnum role) {
         this.role = role;
-    }
-
-    public String getRoleDescription() {
-        return roleDescription;
-    }
-
-    public void setRoleDescription(String roleDescription) {
-        this.roleDescription = roleDescription;
     }
 
     public Set<UserRole> getUserRoles() {

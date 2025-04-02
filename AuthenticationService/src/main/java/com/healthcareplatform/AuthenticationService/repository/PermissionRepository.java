@@ -9,5 +9,7 @@ import java.util.Optional;
 @Repository
 public interface PermissionRepository extends JpaRepository<Permission, Long> {
 
-    Optional<Permission> findByPermission(PermissionEnum permission);
+    Permission findByPermission(PermissionEnum permission);
+
+    long count();
 }
