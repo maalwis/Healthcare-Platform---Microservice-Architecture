@@ -67,15 +67,28 @@ public class User {
     public User() {
     }
 
-    public User(String username, String email, String password) {
+    public User(Long userId, String username, String email, String password,
+                boolean accountNonLocked, boolean accountNonExpired, boolean credentialsNonExpired,
+                boolean enabled, LocalDate credentialsExpiryDate, LocalDate accountExpiryDate,
+                String twoFactorSecret, boolean isTwoFactorEnabled, String signUpMethod,
+                Set<UserRole> userRoles, LocalDateTime createdDate, LocalDateTime updatedDate) {
+
+        this.userId = userId;
         this.username = username;
         this.email = email;
         this.password = password;
-    }
-
-    public User(String userName, String email) {
-        this.username = userName;
-        this.email = email;
+        this.accountNonLocked = accountNonLocked;
+        this.accountNonExpired = accountNonExpired;
+        this.credentialsNonExpired = credentialsNonExpired;
+        this.enabled = enabled;
+        this.credentialsExpiryDate = credentialsExpiryDate;
+        this.accountExpiryDate = accountExpiryDate;
+        this.twoFactorSecret = twoFactorSecret;
+        this.isTwoFactorEnabled = isTwoFactorEnabled;
+        this.signUpMethod = signUpMethod;
+        this.userRoles = userRoles;
+        this.createdDate = createdDate;
+        this.updatedDate = updatedDate;
     }
 
     @Override

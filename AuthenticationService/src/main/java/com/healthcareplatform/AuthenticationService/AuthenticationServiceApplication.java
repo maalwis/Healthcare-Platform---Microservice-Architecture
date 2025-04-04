@@ -14,9 +14,9 @@ public class AuthenticationServiceApplication {
 	}
 
 	@Bean
-	public CommandLineRunner init(InitializationService initializationService) {
+	public CommandLineRunner init(InitializationService initializationService ) {
 		return args -> {
-			initializationService.initializeRolesAndPermissions();
+			initializationService.initializeRolesPermissionsAndUsers();
 		};
 	}
 

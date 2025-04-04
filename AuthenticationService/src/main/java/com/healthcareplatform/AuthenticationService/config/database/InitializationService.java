@@ -1,11 +1,13 @@
 package com.healthcareplatform.AuthenticationService.config.database;
 
 import com.healthcareplatform.AuthenticationService.model.*;
-import com.healthcareplatform.AuthenticationService.repository.PermissionRepository;
-import com.healthcareplatform.AuthenticationService.repository.RolePermissionRepository;
-import com.healthcareplatform.AuthenticationService.repository.RoleRepository;
+import com.healthcareplatform.AuthenticationService.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -13,24 +15,36 @@ import java.util.stream.Collectors;
 public class InitializationService {
 
     private final PermissionRepository permissionRepository;
-
     private final RoleRepository roleRepository;
-
     private final RolePermissionRepository rolePermissionRepository;
+    private final UserRepository userRepository;
+    private final UserRoleRepository userRoleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserProfileRepository userProfileRepository;
 
-    public InitializationService(PermissionRepository permissionRepository,
-                                 RoleRepository roleRepository,
-                                 RolePermissionRepository rolePermissionRepository) {
+    @Autowired
+    public InitializationService(
+            PermissionRepository permissionRepository,
+            RoleRepository roleRepository,
+            RolePermissionRepository rolePermissionRepository,
+            UserRepository userRepository,
+            UserRoleRepository userRoleRepository,
+            PasswordEncoder passwordEncoder,
+            UserProfileRepository userProfileRepository) {
 
         this.permissionRepository = permissionRepository;
         this.roleRepository = roleRepository;
         this.rolePermissionRepository = rolePermissionRepository;
+        this.userRepository = userRepository;
+        this.userRoleRepository = userRoleRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.userProfileRepository = userProfileRepository;
     }
 
     /**
-     * Initializes roles and permissions in the database, connecting roles to their respective permissions.
+     * Initializes roles, permissions, and users in the database.
      */
-    public void initializeRolesAndPermissions() {
+    public void initializeRolesPermissionsAndUsers() {
         // Step 1: Insert all permissions if not already present
         if (permissionRepository.count() == 0) {
             List<Permission> permissions = new ArrayList<>();
@@ -80,9 +94,198 @@ public class InitializationService {
                 }
             }
         }
-
-        // Step 4: Save all role-permission relationships
         rolePermissionRepository.saveAll(rolePermissions);
+
+        // Step 4: Create users and assign roles
+        createUsersAndAssignRoles(roleMap);
+    }
+
+    /**
+     * Creates multiple users and assigns them to specific roles.
+     * @param roleMap Map of RoleEnum to Role entities.
+     */
+    private void createUsersAndAssignRoles(Map<RoleEnum, Role> roleMap) {
+        // Define users with professional names and additional fields
+        List<UserCreationData> userDataList = Arrays.asList(
+                new UserCreationData(
+                        "Eleanor Prescott",       // Full name
+                        "ceo_user",                // Keep original username
+                        "ceo@example.com",         // Keep original email
+                        "pass",                    // Password
+                        "EMP-001",                 // Employee ID
+                        LocalDateTime.now(),       // Hire date
+                        RoleEnum.CHIEF_EXECUTIVE_OFFICER
+                ),
+                new UserCreationData(
+                        "Julian Whitmore",
+                        "head_cardiology",
+                        "head_cardiology@example.com",
+                        "pass",
+                        "EMP-002",
+                        LocalDateTime.now(),
+                        RoleEnum.DEPARTMENT_HEAD_CARDIOLOGY
+                ),
+                new UserCreationData(
+                        "Marcus Reynolds",
+                        "physician_general",
+                        "physician_general@example.com",
+                        "pass",
+                        "EMP-003",
+                        LocalDateTime.now(),
+                        RoleEnum.PHYSICIAN_GENERAL
+                ),
+                new UserCreationData(
+                        "Gabrielle Sinclair",
+                        "surgeon_general",
+                        "surgeon_general@example.com",
+                        "pass",
+                        "EMP-004",
+                        LocalDateTime.now(),
+                        RoleEnum.SURGEON_GENERAL
+                ),
+                new UserCreationData(
+                        "Clara Bennett",
+                        "nurse_registered",
+                        "nurse_registered@example.com",
+                        "pass",
+                        "EMP-005",
+                        LocalDateTime.now(),
+                        RoleEnum.NURSE_REGISTERED
+                ),
+                new UserCreationData(
+                        "Victor Nakamura",
+                        "it_staff",
+                        "it_staff@example.com",
+                        "pass",
+                        "EMP-006",
+                        LocalDateTime.now(),
+                        RoleEnum.IT_STAFF
+                ),
+                new UserCreationData(
+                        "Lydia Chen",
+                        "pharmacist",
+                        "pharmacist@example.com",
+                        "pass",
+                        "EMP-007",
+                        LocalDateTime.now(),
+                        RoleEnum.PHARMACIST
+                ),
+                new UserCreationData(
+                        "Oscar Fitzgerald",
+                        "lab_technician",
+                        "lab_technician@example.com",
+                        "pass",
+                        "EMP-008",
+                        LocalDateTime.now(),
+                        RoleEnum.LABORATORY_TECHNICIAN
+                ),
+                new UserCreationData(
+                        "Amelia Winslow",
+                        "receptionist",
+                        "receptionist@example.com",
+                        "pass",
+                        "EMP-009",
+                        LocalDateTime.now(),
+                        RoleEnum.RECEPTIONIST
+                )
+        );
+
+        for (UserCreationData userData : userDataList) {
+            if (userRepository.findByUsername(userData.getUsername()).isEmpty()) {
+                // Create user
+                User user = new User();
+                user.setUserName(userData.getUsername());
+                user.setEmail(userData.getEmail());
+                user.setPassword(passwordEncoder.encode(userData.getPassword()));
+
+                // Account status flags
+                user.setAccountNonLocked(true);
+                user.setAccountNonExpired(true);
+                user.setCredentialsNonExpired(true);
+                user.setEnabled(true);
+
+                // Expiry dates
+                user.setCredentialsExpiryDate(LocalDate.now().plusMonths(3));
+                user.setAccountExpiryDate(LocalDate.now().plusMonths(3));
+
+                // 2FA settings
+                user.setTwoFactorSecret("manual");
+                user.setTwoFactorEnabled(false);
+
+                userRepository.save(user);
+
+                // Create profile with additional fields
+                UserProfile profile = new UserProfile();
+                profile.setUser(user);
+                profile.setFullName(userData.getFullName());
+                profile.setHireDate(userData.getHireDate());
+                profile.setEmployeeId(userData.getEmployeeId());
+                userProfileRepository.save(profile);
+
+                // Assign role
+                Role role = roleMap.get(userData.getRoleEnum());
+                if (role != null) {
+                    UserRole userRole = new UserRole();
+                    userRole.setUser(user);
+                    userRole.setRole(role);
+                    userRole.setAssignedAt(LocalDateTime.now());
+                    userRole.setId(new UserRoleId(user.getUserId(), role.getRoleId()));
+                    userRoleRepository.save(userRole);
+                }
+            }
+        }
+    }
+
+    /**
+     * Helper class to hold user creation data.
+     */
+    private static class UserCreationData {
+        private final String fullName;
+        private final String username;
+        private final String email;
+        private final String password;
+        private final String employeeId;
+        private final LocalDateTime hireDate;
+        private final RoleEnum roleEnum;
+
+        public UserCreationData(String fullName, String username, String email, String password,
+                                String employeeId, LocalDateTime hireDate, RoleEnum roleEnum) {
+            this.fullName = fullName;
+            this.username = username;
+            this.email = email;
+            this.password = password;
+            this.employeeId = employeeId;
+            this.hireDate = hireDate;
+            this.roleEnum = roleEnum;
+        }
+
+        public String getFullName() {
+            return fullName;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public String getEmployeeId() {
+            return employeeId;
+        }
+
+        public LocalDateTime getHireDate() {
+            return hireDate;
+        }
+
+        public RoleEnum getRoleEnum() {
+            return roleEnum;
+        }
     }
 
     /**
