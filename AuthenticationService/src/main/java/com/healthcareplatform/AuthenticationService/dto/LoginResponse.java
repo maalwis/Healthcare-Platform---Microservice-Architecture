@@ -1,5 +1,7 @@
 package com.healthcareplatform.AuthenticationService.dto;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import java.util.List;
 
 // LoginResponse.java
@@ -7,11 +9,11 @@ public class LoginResponse {
     private String jwtToken;
 
     private String username;
-    private List<String> roles;
+    private List<GrantedAuthority> permissions;
 
-    public LoginResponse(String username, List<String> roles, String jwtToken) {
+    public LoginResponse(String username, List<GrantedAuthority> permissions, String jwtToken) {
         this.username = username;
-        this.roles = roles;
+        this.permissions = permissions;
         this.jwtToken = jwtToken;
     }
 
@@ -31,11 +33,11 @@ public class LoginResponse {
         this.username = username;
     }
 
-    public List<String> getRoles() {
-        return roles;
+    public List<GrantedAuthority> getPermissions() {
+        return permissions;
     }
 
-    public void setRoles(List<String> roles) {
-        this.roles = roles;
+    public void setPermissions(List<GrantedAuthority> permissions) {
+        this.permissions = permissions;
     }
 }

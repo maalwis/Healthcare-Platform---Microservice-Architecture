@@ -1,4 +1,4 @@
-package com.healthcareplatform.AuthenticationService.security.jwt;
+package com.healthcareplatform.PatientManagementService.security.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -17,6 +16,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 @Component
 public class JwtUtils {
@@ -35,23 +35,6 @@ public class JwtUtils {
             return bearerToken.substring(7); // Remove Bearer prefix
         }
         return null;
-    }
-
-    public String generateTokenFromUsername(UserDetails userDetails) {
-        // Retrieve the list of permissions/authorities from the user details
-        // Collect roles from the UserDetails
-        List<String> permissions = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-
-        // Build the JWT token and include the roles as a custom claim
-        return Jwts.builder()
-                .setSubject(userDetails.getUsername())
-                .claim("permissions", permissions) // adding roles as a claim
-                .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-                .signWith(key())
-                .compact();
     }
 
     // Extract permissions from JWT token as List<GrantedAuthority>
@@ -111,3 +94,4 @@ public class JwtUtils {
         return false;
     }
 }
+
