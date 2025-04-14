@@ -50,6 +50,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                 );
                 if (authResponse.getStatusCode() == HttpStatus.OK) {
                     UserDTO userDTO = authResponse.getBody();
+
+                    assert userDTO != null;
                     List<GrantedAuthority> authorities = userDTO.getAuthorityNames().stream()
                             .map(SimpleGrantedAuthority::new)
                             .collect(Collectors.toList());

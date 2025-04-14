@@ -2,6 +2,7 @@ package com.healthcareplatform.Gateway.filters;
 
 
 import com.healthcareplatform.Gateway.dto.UserDTO;
+import com.healthcareplatform.Gateway.security.jwt.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -30,17 +31,19 @@ public class AuthenticationGlobalFilter implements GlobalFilter, Ordered {
 
     // Create a WebClient to call the Authentication Service.
     private final WebClient webClient;
+    private final JwtUtils jwtUtils;
 
-    public AuthenticationGlobalFilter(WebClient.Builder webClientBuilder) {
+    public AuthenticationGlobalFilter(WebClient.Builder webClientBuilder, JwtUtils jwtUtils1) {
         // Base URL of your Authentication Service (e.g. http://localhost:8080)
         this.webClient = webClientBuilder.baseUrl("http://localhost:8080").build();
+        this.jwtUtils = jwtUtils1;
     }
 
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
-        String jwt = parseJwt(request);
+        String jwt = jwtUtils.parseJwt(request);
         String path = request.getURI().getPath();
 
         // Only allow missing JWT for public endpoints.
@@ -102,15 +105,6 @@ public class AuthenticationGlobalFilter implements GlobalFilter, Ordered {
         }
     }
 
-
-    // A simple method to extract the JWT token from the Authorization header.
-    private String parseJwt(ServerHttpRequest request) {
-        String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            return authHeader.substring(7);
-        }
-        return null;
-    }
 
     private boolean checkUserPermissions(List<GrantedAuthority> authorities, String path) {
         // Public endpoints accessible without specific permissions
