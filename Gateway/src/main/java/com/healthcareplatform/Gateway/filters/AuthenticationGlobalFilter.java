@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.core.Ordered;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,10 +32,12 @@ public class AuthenticationGlobalFilter implements GlobalFilter, Ordered {
     private final WebClient webClient;
     private final JwtUtils jwtUtils;
 
-    public AuthenticationGlobalFilter(WebClient.Builder webClientBuilder, JwtUtils jwtUtils1) {
-        // Base URL of your Authentication Service (e.g. http://localhost:8080)
-        this.webClient = webClientBuilder.baseUrl("http://localhost:8080").build();
-        this.jwtUtils = jwtUtils1;
+    public AuthenticationGlobalFilter(WebClient.Builder webClientBuilder, JwtUtils jwtUtils) {
+        // note the "lb://" scheme
+        this.webClient = webClientBuilder
+                .baseUrl("lb://AuthenticationService")
+                .build();
+        this.jwtUtils = jwtUtils;
     }
 
 
@@ -164,6 +165,6 @@ public class AuthenticationGlobalFilter implements GlobalFilter, Ordered {
     @Override
     public int getOrder() {
         // A lower order value means this filter is applied earlier.
-        return -1;
+        return -100; // Lower than RateLimitGlobalFilter's current value
     }
 }

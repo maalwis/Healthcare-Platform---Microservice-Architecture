@@ -41,7 +41,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         try {
             String jwt = parseJwt(request);
             if (jwt != null) {
-                String authServiceUrl = "http://localhost:8080/api/v1/private/validateToken";
+                String authServiceUrl = "http://AuthenticationService:8080/api/v1/private/validateToken";
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("Authorization", "Bearer " + jwt);
                 HttpEntity<String> entity = new HttpEntity<>(headers);

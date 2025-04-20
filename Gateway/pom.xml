@@ -12,7 +12,7 @@
 	<artifactId>Gateway</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Gateway</name>
-	<description>Gateway healthcareplatform</description>
+	<description>Gateway healthcare platform</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -27,7 +27,7 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>23</java.version>
 		<spring-cloud.version>2024.0.1</spring-cloud.version>
 	</properties>
 	<dependencies>
@@ -89,7 +89,21 @@
 			<scope>runtime</scope>
 		</dependency>
 
+
+		<!-- https://mvnrepository.com/artifact/com.github.vladimir-bukhtoyarov/bucket4j-core -->
+		<dependency>
+			<groupId>com.github.vladimir-bukhtoyarov</groupId>
+			<artifactId>bucket4j-core</artifactId>
+			<version>8.0.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+
 	</dependencies>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -101,6 +115,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
 
 	<build>
 		<plugins>
