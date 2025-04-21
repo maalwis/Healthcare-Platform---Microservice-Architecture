@@ -1,6 +1,7 @@
 package com.healthcareplatform.AppointmentSchedulingService.security.jwt;
 
 import com.healthcareplatform.AppointmentSchedulingService.dto.UserDTO;
+import com.healthcareplatform.AppointmentSchedulingService.userClient.UserClient;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,7 +18,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -27,13 +27,13 @@ import java.util.stream.Collectors;
 @Component
 public class AuthTokenFilter extends OncePerRequestFilter {
 
+    private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
+
     @Autowired
     private JwtUtils jwtUtils;
 
     @Autowired
-    private RestTemplate restTemplate;
-
-    private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
+    private UserClient userClient;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -41,13 +41,15 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         try {
             String jwt = parseJwt(request);
             if (jwt != null) {
-                String authServiceUrl = "http://AuthenticationService:8080/api/v1/private/validateToken";
-                HttpHeaders headers = new HttpHeaders();
-                headers.set("Authorization", "Bearer " + jwt);
-                HttpEntity<String> entity = new HttpEntity<>(headers);
-                ResponseEntity<UserDTO> authResponse = restTemplate.exchange(
-                        authServiceUrl, HttpMethod.GET, entity, UserDTO.class
-                );
+                String requestInfo = String.format("Request URI: %s, Time: %d",
+                        request.getRequestURI(), System.currentTimeMillis());
+
+                System.out.println("Processing " + requestInfo);
+                System.out.println("Calling userClient.getUserDto with token: " + jwt);
+                ResponseEntity<UserDTO> authResponse = userClient.getUserDto("Bearer " + jwt);
+                System.out.println("Received response: " + authResponse.getStatusCode());
+
+
                 if (authResponse.getStatusCode() == HttpStatus.OK) {
                     UserDTO userDTO = authResponse.getBody();
 
@@ -71,7 +73,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
-
 
 
     private String parseJwt(HttpServletRequest request) {
