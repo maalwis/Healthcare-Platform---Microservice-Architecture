@@ -1,7 +1,7 @@
 package com.healthcareplatform.PrescriptionService.security.jwt;
 
 import com.healthcareplatform.PrescriptionService.dto.UserDTO;
-import com.healthcareplatform.PrescriptionService.userClient.UserClient;
+import com.healthcareplatform.PrescriptionService.serviceImpl.AuthenticationServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,22 +33,16 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private JwtUtils jwtUtils;
 
     @Autowired
-    private UserClient userClient;
+    private AuthenticationServiceImpl authenticationService ;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
-            String jwt = parseJwt(request);
+            String jwt = jwtUtils.getJwtFromHeader(request);
             if (jwt != null) {
-                String requestInfo = String.format("Request URI: %s, Time: %d",
-                        request.getRequestURI(), System.currentTimeMillis());
 
-                System.out.println("Processing " + requestInfo);
-                System.out.println("Calling userClient.getUserDto with token: " + jwt);
-                ResponseEntity<UserDTO> authResponse = userClient.getUserDto("Bearer " + jwt);
-                System.out.println("Received response: " + authResponse.getStatusCode());
-
+                ResponseEntity<UserDTO> authResponse = authenticationService.callAuth(jwt);
 
                 if (authResponse.getStatusCode() == HttpStatus.OK) {
                     UserDTO userDTO = authResponse.getBody();
@@ -74,10 +68,4 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-
-    private String parseJwt(HttpServletRequest request) {
-        String jwt = jwtUtils.getJwtFromHeader(request);
-        logger.debug("AuthTokenFilter.java: {}", jwt);
-        return jwt;
-    }
 }

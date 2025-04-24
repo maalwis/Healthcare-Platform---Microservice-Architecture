@@ -22,6 +22,7 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests ->
                         requests
+                                .requestMatchers("/actuator/**").permitAll()
                                 .requestMatchers("/api/v1/patients/**")
                                 .hasAnyAuthority(
                                         "VIEW_PATIENT_RECORDS",
