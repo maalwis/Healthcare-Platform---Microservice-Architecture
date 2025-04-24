@@ -3,6 +3,7 @@ package com.healthcareplatform.Gateway.filters;
 
 import com.healthcareplatform.Gateway.dto.UserDTO;
 import com.healthcareplatform.Gateway.security.jwt.JwtUtils;
+import com.healthcareplatform.Gateway.service.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -27,19 +28,13 @@ import java.util.stream.Collectors;
 public class AuthenticationGlobalFilter implements GlobalFilter, Ordered {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationGlobalFilter.class);
-
-    // Create a WebClient to call the Authentication Service.
-    private final WebClient webClient;
     private final JwtUtils jwtUtils;
+    private final AuthenticationService authenticationService;
 
-    public AuthenticationGlobalFilter(WebClient.Builder webClientBuilder, JwtUtils jwtUtils) {
-        // note the "lb://" scheme
-        this.webClient = webClientBuilder
-                .baseUrl("lb://AuthenticationService")
-                .build();
+    public AuthenticationGlobalFilter(JwtUtils jwtUtils, AuthenticationService authenticationService) {
         this.jwtUtils = jwtUtils;
+        this.authenticationService = authenticationService;
     }
-
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -60,15 +55,8 @@ public class AuthenticationGlobalFilter implements GlobalFilter, Ordered {
         }
 
         try {
-            // URL to call in the Authentication Service.
-            // Same as: "http://localhost:8080/api/v1/private/validateToken"
-            String authServiceUrl = "/api/v1/private/validateToken";
 
-            return webClient.get()
-                    .uri(authServiceUrl)
-                    .header("Authorization", "Bearer " + jwt)
-                    .retrieve()
-                    .toEntity(UserDTO.class)
+            return authenticationService.validateToken(jwt)
                     .flatMap(responseEntity -> {
                         if (responseEntity.getStatusCode() == HttpStatus.OK) {
                             UserDTO userDTO = responseEntity.getBody();
