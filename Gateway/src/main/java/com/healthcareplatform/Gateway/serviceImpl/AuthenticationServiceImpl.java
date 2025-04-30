@@ -29,9 +29,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .toEntity(UserDTO.class);
     }
 
-    private ResponseEntity<UserDTO> callAuthFallback(String jwt, Throwable t) {
-        // Return a default response
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                .body(null);
+    public Mono<ResponseEntity<UserDTO>> callAuthFallback(String jwt, Throwable t) {
+        return Mono.just(
+                ResponseEntity
+                        .status(HttpStatus.SERVICE_UNAVAILABLE)
+                        .body(null)
+        );
     }
 }

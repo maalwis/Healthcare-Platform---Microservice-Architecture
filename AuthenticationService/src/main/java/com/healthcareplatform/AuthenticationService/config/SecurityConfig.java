@@ -31,6 +31,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(requests ->
                 requests
+                        .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/api/v1/auth/public/login").permitAll()
                         .requestMatchers("/api/csrf-token").permitAll()
                         .requestMatchers("/api/v1/auth/logout").authenticated()

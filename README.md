@@ -1,1 +1,0 @@
-# Healthcare-Platform---Microservice-Architecture

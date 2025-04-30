@@ -1,0 +1,81 @@
+# Version control
+.git/
+.gitignore
+.svn/
+.hg/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+
+# Java build output
+**/target/
+*.class
+
+# General build outputs
+build/
+dist/
+out/
+
+# Test directories and files
+test/
+tests/
+*_test.go
+
+# Debug and log files
+debug/
+*.log
+
+# Temporary and cache files
+tmp/
+temp/
+*.tmp
+
+# Documentation and markdown
+*.md
+README*
+docs/
+HELP.md
+
+# Docker and Compose files
+Dockerfile*
+docker-compose*
+
+# Environment and secrets
+.env*
+*.env
+*.pem
+*.key
+*.crt
+config.local.*
+*.local.yml
+.local/
+local/
+
+# Node.js (for completeness, even if not detected)
+node_modules/
+npm-debug.log
+yarn-debug.log
+
+# Python (for completeness, even if not detected)
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.coverage
+
+# Go (for completeness, even if not detected)
+/vendor/
+*.test
+.go-cache/
+
+# Project-specific exclusions
+*.gitattributes
+
+# Exclude Maven wrapper scripts (but NOT .mvn/)
+# (Do NOT ignore mvnw or mvnw.cmd)
+
+# Exclude nothing else

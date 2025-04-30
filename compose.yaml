@@ -1,0 +1,170 @@
+version: '3.9'
+
+services:
+  # PostgreSQL Databases
+  db_appointment:
+    image: postgres
+    container_name: db_appointment
+    environment:
+      POSTGRES_DB: AppointmentSchedulingService
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: alwis
+    ports:
+      - "5433:5432"
+    volumes:
+      - appointment-data:/var/lib/postgresql/data
+
+  db_auth:
+    image: postgres
+    container_name: db_auth
+    environment:
+      POSTGRES_DB: AuthenticationService
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: alwis
+    ports:
+      - "5434:5432"
+    volumes:
+      - auth-data:/var/lib/postgresql/data
+
+  db_patient:
+    image: postgres
+    container_name: db_patient
+    environment:
+      POSTGRES_DB: PatientManagementService
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: alwis
+    ports:
+      - "5435:5432"
+    volumes:
+      - patient-data:/var/lib/postgresql/data
+
+  db_prescription:
+    image: postgres
+    container_name: db_prescription
+    environment:
+      POSTGRES_DB: PrescriptionService
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: alwis
+    ports:
+      - "5436:5432"
+    volumes:
+      - prescription-data:/var/lib/postgresql/data
+
+  # RabbitMQ Message Broker
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"   # AMQP port
+      - "15672:15672" # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  # Eureka Service Registry
+  service-registry:
+    image: service-registry:latest
+    container_name: service-registry
+    ports:
+      - "8761:8761"
+
+  authentication-service:
+    image: authentication-service:latest
+    container_name: authentication-service
+    depends_on:
+      - db_auth
+      - service-registry
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db_auth:5432/AuthenticationService
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: alwis
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+
+  # Microservices
+  appointment-service:
+    image: appointment-service:latest
+    container_name: appointment-service
+    depends_on:
+      - db_appointment
+      - service-registry
+      - rabbitmq
+    # ports: defines host-to-container port mappings in hostPort:containerPort format.
+    # Left side = port on your machine (host)
+    # Right side = port inside the container
+    ports:
+      - "8082:8082"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db_appointment:5432/AppointmentSchedulingService
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: alwis
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+
+  patient-service:
+    image: patient-service:latest
+    container_name: patient-service
+    depends_on:
+      - db_patient
+      - service-registry
+      - rabbitmq
+    ports:
+      - "8086:8086"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db_patient:5432/PatientManagementService
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: alwis
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+
+  prescription-service:
+    image: prescription-service:latest
+    container_name: prescription-service
+    depends_on:
+      - db_prescription
+      - service-registry
+      - rabbitmq
+    ports:
+      - "8084:8084"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db_prescription:5432/PrescriptionService
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: alwis
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+
+  # API Gateway
+  gateway:
+    image: gateway:latest
+    container_name: gateway
+    depends_on:
+      - authentication-service
+      - appointment-service
+      - patient-service
+      - prescription-service
+      - service-registry
+    ports:
+      - "9090:9090"
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://service-registry:8761/eureka
+
+volumes:
+  appointment-data:
+  auth-data:
+  patient-data:
+  prescription-data:
+
