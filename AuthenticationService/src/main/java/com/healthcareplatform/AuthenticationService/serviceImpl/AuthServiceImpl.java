@@ -33,7 +33,10 @@ public class AuthServiceImpl implements AuthService {
         try {
             // Attempt authentication with provided credentials
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUsername(),
+                            loginRequest.getPassword()
+                    )
             );
 
             // Store authentication in SecurityContext
@@ -51,8 +54,6 @@ public class AuthServiceImpl implements AuthService {
             // Build and return the response including username, authorities, and JWT token
             return new LoginResponse(userDetails.getUsername(), authorities, jwtToken);
         } catch (AuthenticationException ex) {
-            // It is a good practice to throw custom exceptions rather than returning hardcoded maps from service code.
-            // You could create a custom exception (e.g., InvalidCredentialsException) if needed.
             throw new RuntimeException("Bad credentials");
         }
     }

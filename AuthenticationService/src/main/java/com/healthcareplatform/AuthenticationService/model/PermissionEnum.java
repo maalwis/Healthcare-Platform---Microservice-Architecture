@@ -65,7 +65,27 @@ public enum PermissionEnum {
     CONFIGURE_SYSTEM_SETTINGS("ConfigureSystemSettings",
             "Allows configuration of system-wide settings and parameters."),
     ACCESS_IT_RESOURCES("AccessITResources",
-            "Allows access to IT systems, network resources, and infrastructure management.");
+            "Allows access to IT systems, network resources, and infrastructure management."),
+    VIEW_STAFF_PROFILES("ViewStaffProfiles",
+            "Allows viewing of hospital staff profiles."),
+    EDIT_STAFF_PROFILES("EditStaffProfiles",
+            "Allows editing of hospital staff profiles."),
+    VIEW_PRESCRIPTIONS("ViewPrescriptions",
+            "Allows viewing of prescription records."),
+    CREATE_INVOICES("CreateInvoices",
+            "Allows generation of invoice records."),
+    VIEW_CLAIMS("ViewClaims",
+            "Allows viewing of insurance claim statuses."),
+    SUBMIT_CLAIMS("SubmitClaims",
+            "Allows submission of insurance claims."),
+    VIEW_NOTIFICATIONS("ViewNotifications",
+            "Allows viewing of system notifications."),
+    MANAGE_NOTIFICATIONS("ManageNotifications",
+            "Allows configuration of notification settings."),
+    VIEW_EVENT_STREAM("ViewEventStream",
+            "Allows access to raw event stream for analytics.");
+
+
 
     private final String permissionName;
 
