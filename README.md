@@ -154,7 +154,7 @@ Modern healthcare management platform built with microservices architecture. Fea
 | GET    | /api/v1/analytics/reports        | Generate analytical reports    |
 | GET    | /api/v1/analytics/events         | Retrieve tracked events        |
 
-[Remaining sections about event architecture, getting started, etc., remain unchanged...]
+
 
 ## Event-Driven Architecture
 
