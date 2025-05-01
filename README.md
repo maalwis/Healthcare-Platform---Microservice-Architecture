@@ -1,25 +1,73 @@
 # Healthcare Microservices System
 
-A distributed system following microservices architecture for managing healthcare operations, including patient management, appointments, billing, and more.
+Modern healthcare management platform built with microservices architecture. Features secure patient data handling, appointment scheduling, pharmacy operations, and real-time analytics with event-driven communication.
 
 ## Table of Contents
+- [System Architecture](#system-architecture)
+  - [API Gateway](#api-gateway)
+  - [Authentication & Authorization](#authentication--authorization)
+  - [Service Registry](#service-registry)
+  - [Resilience Features](#resilience-features)
 - [REST API Endpoints](#rest-api-endpoints)
-    - [Patient Service](#patient-service)
-    - [Appointment Service](#appointment-service)
-    - [Staff Service](#staff-service)
-    - [Pharmacy Service](#pharmacy-service)
-    - [Inventory Service](#inventory-service)
-    - [Billing & Claims Service](#billing--claims-service)
-    - [Audit Logging Service](#audit-logging-service)
-    - [Notification Service](#notification-service)
-    - [Analytics Service](#analytics-service)
+  - [Patient Service](#patient-service)
+  - [Appointment Service](#appointment-service)
+  - [Staff Service](#staff-service)
+  - [Pharmacy Service](#pharmacy-service)
+  - [Inventory Service](#inventory-service)
+  - [Billing & Claims Service](#billing--claims-service)
+  - [Audit Logging Service](#audit-logging-service)
+  - [Notification Service](#notification-service)
+  - [Analytics Service](#analytics-service)
 - [Event-Driven Architecture](#event-driven-architecture)
-    - [Event Publishers](#event-publishers)
-    - [Event Consumers](#event-consumers)
+  - [Event Publishers](#event-publishers)
+  - [Event Consumers](#event-consumers)
 - [Getting Started](#getting-started)
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
+
+## System Architecture
+
+### API Gateway
+- **Central Entry Point**: Handles all incoming requests
+- **Security Layer**:
+  - JWT validation & token introspection
+  - Role-based access control (RBAC)
+  - Rate limiting (requests/sec per service)
+- **Routing**: Forwards authorized requests to appropriate microservices
+- **Integration**: Communicates with AuthenticationService via Feign client
+
+### Authentication & Authorization
+- **JWT Management**:
+  - Token issuance/validation
+  - Token revocation list (RL)
+- **Credential Storage**:
+  - Encrypted user credentials
+  - Role/authority mappings
+- **Service Integration**:
+  - Feign clients for token introspection
+  - OAuth2 compliant flows
+
+### Service Registry
+- **Service Discovery**:
+  - Eureka/Consul-based registry
+  - Health checks and status monitoring
+- **Dynamic Routing**:
+  - Logical service names
+  - Instance metadata tracking
+
+### Resilience Features
+- **Circuit Breaking**:
+  - Resilience4J implementation
+  - Fallback mechanisms
+  - Automatic service recovery
+- **Load Balancing**:
+  - Client-side load distribution
+  - Spring Cloud LoadBalancer
+  - Zone-aware routing
+- **Inter-Service Auth**:
+  - JWT propagation between services
+  - Automatic Authentication object creation
 
 
 ## REST API Endpoints
