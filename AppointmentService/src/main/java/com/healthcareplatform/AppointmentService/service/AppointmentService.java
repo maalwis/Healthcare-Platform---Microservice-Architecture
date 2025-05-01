@@ -24,7 +24,15 @@ public class AppointmentService {
         return null;
     };
 
-    public void cancelAppointment(UUID appointmentId){
+    public void deleteAppointment(UUID appointmentId){
         return;
     };
+
+    public void cancelAppointment(UUID appointmentId) {
+        return;
+    }
+
+    public void rescheduleAppointment(UUID appointmentId) {
+        return;
+    }
 }

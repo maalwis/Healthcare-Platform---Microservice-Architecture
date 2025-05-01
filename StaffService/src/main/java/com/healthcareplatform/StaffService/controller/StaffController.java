@@ -24,7 +24,7 @@ public class StaffController {
 
     /**
      * Retrieve a list of all staff members.
-     *
+     * <p>
      * TODO: Delegate to StaffService to retrieve all staff
      *
      * @return ResponseEntity containing a list of StaffDto objects and HTTP 200 status.
@@ -37,12 +37,12 @@ public class StaffController {
 
     /**
      * Retrieve details for a specific staff member by ID.
-     *
+     * <p>
      * TODO: Delegate to StaffService to fetch staff by ID
      *
      * @param staffId Unique identifier of the staff member (path variable)
      * @return ResponseEntity containing StaffDto and HTTP 200 status if found;
-     *         otherwise exception is propagated.
+     * otherwise exception is propagated.
      */
     @GetMapping("/{id}")
     public ResponseEntity<StaffDto> getStaffById(@PathVariable UUID staffId) {
@@ -52,7 +52,7 @@ public class StaffController {
 
     /**
      * Create a new staff profile.
-     *
+     * <p>
      * TODO: Delegate to StaffService to create staff
      *
      * @param staff Payload containing staff data (validated request body)
@@ -66,10 +66,10 @@ public class StaffController {
 
     /**
      * Update an existing staff member's profile.
-     *
+     * <p>
      * TODO: Delegate to StaffService to update staff details
      *
-     * @param staffId Unique identifier of the staff member (path variable)
+     * @param staffId  Unique identifier of the staff member (path variable)
      * @param staffDto Payload containing updated data (validated request body)
      * @return ResponseEntity containing updated StaffDto and HTTP 200 status.
      */
@@ -83,7 +83,7 @@ public class StaffController {
 
     /**
      * Delete a staff profile by ID.
-     *
+     * <p>
      * TODO: Delegate to StaffService to delete staff
      *
      * @param staffId Unique identifier of the staff member (path variable)
@@ -92,6 +92,34 @@ public class StaffController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStaff(@PathVariable UUID staffId) {
         staffService.deleteStaff(staffId);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * availability check of a staff profile by ID.
+     * <p>
+     * TODO: Delegate to StaffService to delete staff
+     *
+     * @param staffId Unique identifier of the staff member (path variable)
+     * @return ResponseEntity with HTTP 204 No Content on successful deletion.
+     */
+    @GetMapping("/{id}/availability")
+    public ResponseEntity<Void> availabilityStaff(@PathVariable UUID staffId) {
+        staffService.availabilityStaff(staffId);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Check assignments of a staff profile by ID.
+     * <p>
+     * TODO: Delegate to StaffService to delete staff
+     *
+     * @param staffId Unique identifier of the staff member (path variable)
+     * @return ResponseEntity with HTTP 204 No Content on successful deletion.
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<Void> assignmentsStaff(@PathVariable UUID staffId) {
+        staffService.assignmentsStaff(staffId);
         return ResponseEntity.noContent().build();
     }
 }

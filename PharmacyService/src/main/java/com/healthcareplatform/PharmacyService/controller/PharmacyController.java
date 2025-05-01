@@ -24,7 +24,7 @@ public class PharmacyController {
 
     /**
      * Retrieve a list of all prescriptions.
-     *
+     * <p>
      * TODO: Delegate to PharmacyService to retrieve all prescriptions
      *
      * @return ResponseEntity containing a list of PrescriptionDto objects and HTTP 200 status.
@@ -37,12 +37,12 @@ public class PharmacyController {
 
     /**
      * Retrieve details for a specific prescription by ID.
-     *
+     * <p>
      * TODO: Delegate to PharmacyService to fetch prescription by ID
      *
      * @param prescriptionId Unique identifier of the prescription (path variable)
      * @return ResponseEntity containing PrescriptionDto and HTTP 200 status if found;
-     *         otherwise exception is propagated (e.g., 404 Not Found).
+     * otherwise exception is propagated (e.g., 404 Not Found).
      */
     @GetMapping("/{prescriptionId}")
     public ResponseEntity<PrescriptionDto> getPrescriptionById(@PathVariable UUID prescriptionId) {
@@ -52,7 +52,7 @@ public class PharmacyController {
 
     /**
      * Create a new prescription record.
-     *
+     * <p>
      * TODO: Delegate to PharmacyService to create a new prescription
      *
      * @param prescription Payload containing prescription data (validated request body)
@@ -66,7 +66,7 @@ public class PharmacyController {
 
     /**
      * Mark a prescription as filled.
-     *
+     * <p>
      * TODO: Delegate to PharmacyService to fill prescription
      *
      * @param prescriptionId Unique identifier of the prescription (path variable)
@@ -75,6 +75,20 @@ public class PharmacyController {
     @PostMapping("/{id}/fill")
     public ResponseEntity<Void> fillPrescription(@PathVariable UUID prescriptionId) {
         pharmacyService.fillPrescription(prescriptionId);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Mark a prescription as dispense.
+     * <p>
+     * TODO: Delegate to PharmacyService to fill prescription
+     *
+     * @param prescriptionId Unique identifier of the prescription (path variable)
+     * @return ResponseEntity with HTTP 204 No Content on successful fill.
+     */
+    @PostMapping("/{id}/fill")
+    public ResponseEntity<Void> dispensePrescription(@PathVariable UUID prescriptionId) {
+        pharmacyService.dispensePrescription(prescriptionId);
         return ResponseEntity.noContent().build();
     }
 }

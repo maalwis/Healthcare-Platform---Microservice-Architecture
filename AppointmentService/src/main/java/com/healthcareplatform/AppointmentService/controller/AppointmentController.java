@@ -82,6 +82,18 @@ public class AppointmentController {
     }
 
     /**
+     * delete an appointment by ID.
+     *
+     * TODO: Delegate to AppointmentService to delete appointment
+     *
+     * @param appointmentId Unique identifier of the appointment (path variable)
+     * @return ResponseEntity with HTTP 204 No Content on successful cancellation.
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAppointment(@PathVariable UUID appointmentId) {
+        appointmentService.deleteAppointment(appointmentId);
+        return ResponseEntity.noContent().build();
+    }/**
      * Cancel an appointment by ID.
      *
      * TODO: Delegate to AppointmentService to cancel appointment
@@ -89,9 +101,23 @@ public class AppointmentController {
      * @param appointmentId Unique identifier of the appointment (path variable)
      * @return ResponseEntity with HTTP 204 No Content on successful cancellation.
      */
-    @DeleteMapping("/{id}")
+    @PostMapping("/{id}/cancel")
     public ResponseEntity<Void> cancelAppointment(@PathVariable UUID appointmentId) {
         appointmentService.cancelAppointment(appointmentId);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Reschedule an appointment by ID.
+     * <p>
+     * TODO: Delegate to AppointmentService to reschedule appointment
+     *
+     * @param appointmentId Unique identifier of the appointment (path variable)
+     * @return ResponseEntity with HTTP 204 No Content on successful cancellation.
+     */
+    @PostMapping("/{id}/reschedule")
+    public ResponseEntity<Void> rescheduleAppointment(@PathVariable UUID appointmentId) {
+        appointmentService.rescheduleAppointment(appointmentId);
         return ResponseEntity.noContent().build();
     }
 }

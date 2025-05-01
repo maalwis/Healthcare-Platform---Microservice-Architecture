@@ -18,7 +18,7 @@ public class BillingService {
         return null;
     };
 
-    public ClaimDto submitClaim(@Valid ClaimDto claim){
+    public ClaimDto submitClaim(@Valid ClaimDto claim, UUID claimID){
         return null;
     };
 
@@ -33,4 +33,8 @@ public class BillingService {
     public InvoiceDto createInvoice(@Valid InvoiceDto invoice){
         return null;
     };
+
+    public List<InvoiceDto> getInvoicesById(UUID invoiceId) {
+        return null;
+    }
 }

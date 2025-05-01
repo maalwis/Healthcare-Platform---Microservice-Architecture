@@ -9,19 +9,34 @@ import java.util.UUID;
 
 @Service
 public class PharmacyService {
-    public PrescriptionDto getPrescriptionById(UUID prescriptionId){
+    public PrescriptionDto getPrescriptionById(UUID prescriptionId) {
         return null;
-    };
+    }
 
-    public PrescriptionDto createPrescription(@Valid PrescriptionDto prescription){
+    ;
+
+    public PrescriptionDto createPrescription(@Valid PrescriptionDto prescription) {
         return null;
-    };
-    public void fillPrescription(UUID prescriptionId){
+    }
+
+    ;
+
+    public void fillPrescription(UUID prescriptionId) {
         return;
-    };
+    }
 
-    public List<PrescriptionDto> getAllPrescriptions(){
+    ;
+
+    public List<PrescriptionDto> getAllPrescriptions() {
         return null;
-    };
+    }
+
+    ;
+
+    public void dispensePrescription(UUID prescriptionId) {
+    }
 
 }
+
+
+
