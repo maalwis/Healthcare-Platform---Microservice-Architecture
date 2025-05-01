@@ -7,10 +7,16 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
-public interface AnalyticsService {
-    List<AnalyticsReportDto> getAllReports();
+public class AnalyticsService {
+    public List<AnalyticsReportDto> getAllReports() {
+        return null;
+    };
 
-    AnalyticsReportDto getReportById(UUID reportId);
+    public AnalyticsReportDto getReportById(UUID reportId){
+        return null;
+    };
 
-    AnalyticsReportDto generateReport(@Valid AnalyticsRequestDto request);
+    public AnalyticsReportDto generateReport(@Valid AnalyticsRequestDto request){
+        return null;
+    };
 }

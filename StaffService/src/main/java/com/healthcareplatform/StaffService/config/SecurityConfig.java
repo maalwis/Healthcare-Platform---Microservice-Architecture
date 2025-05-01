@@ -27,7 +27,7 @@ public class SecurityConfig {
                         .hasAnyAuthority(
                                 "VIEW_STAFF_PROFILES",
                                 "EDIT_STAFF_PROFILES",
-                                "MANAGE_STAFF_SCHEDULES")
+                                "MANAGE_STAFF_SCHEDULES", "MANAGE_APPOINTMENTS")
                         .anyRequest().authenticated());
 
         http.exceptionHandling(exception ->

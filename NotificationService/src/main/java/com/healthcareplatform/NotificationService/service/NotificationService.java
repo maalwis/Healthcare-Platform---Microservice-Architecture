@@ -2,11 +2,17 @@ package com.healthcareplatform.NotificationService.service;
 
 import com.healthcareplatform.NotificationService.dto.NotificationDto;
 import jakarta.validation.Valid;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public interface NotificationService {
-    List<NotificationDto> getAllNotifications();
+@Service
+public class NotificationService {
+    public List<NotificationDto> getAllNotifications(){
+        return null;
+    };
 
-    NotificationDto sendNotification(@Valid NotificationDto notification);
+    public NotificationDto sendNotification(@Valid NotificationDto notification){
+        return null;
+    };
 }

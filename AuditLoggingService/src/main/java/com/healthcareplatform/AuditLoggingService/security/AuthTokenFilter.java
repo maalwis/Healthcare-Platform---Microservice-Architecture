@@ -1,7 +1,7 @@
 package com.healthcareplatform.AuditLoggingService.security;
 
 import com.healthcareplatform.AuditLoggingService.dto.UserDTO;
-import com.healthcareplatform.AuditLoggingService.serviceImpl.AuthenticationServiceImpl;
+import com.healthcareplatform.AuditLoggingService.service.AuthenticationService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,7 +34,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     private JwtUtils jwtUtils;
 
     @Autowired
-    private AuthenticationServiceImpl authenticationService ;
+    private AuthenticationService authenticationService ;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)

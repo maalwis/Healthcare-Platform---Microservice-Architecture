@@ -2,19 +2,31 @@ package com.healthcareplatform.StaffService.service;
 
 import com.healthcareplatform.StaffService.dto.StaffDto;
 import jakarta.validation.Valid;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface StaffService {
-    List<StaffDto> getAllStaff();
+@Service
+public class StaffService {
+    public List<StaffDto> getAllStaff(){
+        return null;
+    };
 
-    StaffDto getStaffById(UUID staffId);
+    public StaffDto getStaffById(UUID staffId){
+        return null;
+    };
 
-    StaffDto createStaff(@Valid StaffDto staff);
+    public StaffDto createStaff(@Valid StaffDto staff){
+        return null;
+    };
 
-    StaffDto updateStaff(UUID staffId, @Valid StaffDto staffDto);
+    public StaffDto updateStaff(UUID staffId, @Valid StaffDto staffDto){
+        return null;
+    };
 
-    void deleteStaff(UUID staffId);
+    public void deleteStaff(UUID staffId){
+        return ;
+    };
 
 }

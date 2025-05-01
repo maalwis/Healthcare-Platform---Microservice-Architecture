@@ -3,20 +3,34 @@ package com.healthcareplatform.BillingClaimsService.service;
 import com.healthcareplatform.BillingClaimsService.dto.ClaimDto;
 import com.healthcareplatform.BillingClaimsService.dto.InvoiceDto;
 import jakarta.validation.Valid;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface BillingService {
-    List<ClaimDto> getAllClaims();
+@Service
+public class BillingService {
+    public List<ClaimDto> getAllClaims(){
+        return null;
+    };
 
-    ClaimDto getClaimById(UUID claimId);
+    public ClaimDto getClaimById(UUID claimId){
+        return null;
+    };
 
-    ClaimDto submitClaim(@Valid ClaimDto claim);
+    public ClaimDto submitClaim(@Valid ClaimDto claim){
+        return null;
+    };
 
-    void denyClaim(UUID claimId);
+    public void denyClaim(UUID claimId){
+        return;
+    };
 
-    List<InvoiceDto> getAllInvoices();
+    public List<InvoiceDto> getAllInvoices(){
+        return null;
+    };
 
-    InvoiceDto createInvoice(@Valid InvoiceDto invoice);
+    public InvoiceDto createInvoice(@Valid InvoiceDto invoice){
+        return null;
+    };
 }

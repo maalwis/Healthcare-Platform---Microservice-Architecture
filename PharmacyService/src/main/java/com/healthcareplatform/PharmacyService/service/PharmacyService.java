@@ -2,17 +2,26 @@ package com.healthcareplatform.PharmacyService.service;
 
 import com.healthcareplatform.PharmacyService.dto.PrescriptionDto;
 import jakarta.validation.Valid;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface PharmacyService {
-    PrescriptionDto getPrescriptionById(UUID prescriptionId);
+@Service
+public class PharmacyService {
+    public PrescriptionDto getPrescriptionById(UUID prescriptionId){
+        return null;
+    };
 
-    PrescriptionDto createPrescription(@Valid PrescriptionDto prescription);
+    public PrescriptionDto createPrescription(@Valid PrescriptionDto prescription){
+        return null;
+    };
+    public void fillPrescription(UUID prescriptionId){
+        return;
+    };
 
-    void fillPrescription(UUID prescriptionId);
-
-    List<PrescriptionDto> getAllPrescriptions();
+    public List<PrescriptionDto> getAllPrescriptions(){
+        return null;
+    };
 
 }

@@ -3,18 +3,30 @@ package com.healthcareplatform.InventoryService.service;
 import com.healthcareplatform.InventoryService.dto.InventoryDto;
 import com.healthcareplatform.InventoryService.dto.ReorderRequestDto;
 import jakarta.validation.Valid;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface InventoryService {
-    List<InventoryDto> getAllItems();
+@Service
+public class InventoryService {
+    public List<InventoryDto> getAllItems(){
+        return null;
+    };
 
-    InventoryDto getItemById(UUID itemId);
+    public InventoryDto getItemById(UUID itemId){
+        return null;
+    };
 
-    InventoryDto addItem(@Valid InventoryDto item);
+    public InventoryDto addItem(@Valid InventoryDto item){
+        return null;
+    };
 
-    InventoryDto updateItem(UUID itemId, @Valid InventoryDto itemDto);
+    public InventoryDto updateItem(UUID itemId, @Valid InventoryDto itemDto){
+        return null;
+    };
 
-    void reorderItem(UUID itemId, ReorderRequestDto reorderRequest);
+    public void reorderItem(UUID itemId, ReorderRequestDto reorderRequest){
+        return ;
+    };
 }

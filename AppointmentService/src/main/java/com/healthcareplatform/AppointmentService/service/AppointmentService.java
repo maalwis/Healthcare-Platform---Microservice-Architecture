@@ -2,18 +2,29 @@ package com.healthcareplatform.AppointmentService.service;
 
 import com.healthcareplatform.AppointmentService.dto.AppointmentDto;
 import jakarta.validation.Valid;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+@Service
+public class AppointmentService {
+    public List<AppointmentDto> getAllAppointments(){
+        return null;
+    };
 
-public interface AppointmentService {
-    List<AppointmentDto> getAllAppointments();
+    public AppointmentDto getAppointmentById(UUID appointmentId){
+        return null;
+    };
 
-    AppointmentDto getAppointmentById(UUID appointmentId);
+    public AppointmentDto createAppointment(@Valid AppointmentDto appointment){
+        return null;
+    };
 
-    AppointmentDto createAppointment(@Valid AppointmentDto appointment);
+    public AppointmentDto updateAppointment(UUID appointmentId, @Valid AppointmentDto appointmentDto){
+        return null;
+    };
 
-    AppointmentDto updateAppointment(UUID appointmentId, @Valid AppointmentDto appointmentDto);
-
-    void cancelAppointment(UUID appointmentId);
+    public void cancelAppointment(UUID appointmentId){
+        return;
+    };
 }
