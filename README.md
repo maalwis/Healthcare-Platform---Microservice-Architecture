@@ -4,10 +4,12 @@ Modern healthcare management platform built with microservices architecture. Fea
 
 ## Table of Contents
 - [System Architecture](#system-architecture)
+  - [Defense in Depth Security](#Defense-in-Depth-Security)
   - [API Gateway](#api-gateway)
   - [Authentication & Authorization](#authentication--authorization)
   - [Service Registry](#service-registry)
   - [Resilience Features](#resilience-features)
+- [Service Catalog](#Service-Catalog)
 - [REST API Endpoints](#rest-api-endpoints)
   - [Patient Service](#patient-service)
   - [Appointment Service](#appointment-service)
@@ -21,12 +23,31 @@ Modern healthcare management platform built with microservices architecture. Fea
 - [Event-Driven Architecture](#event-driven-architecture)
   - [Event Publishers](#event-publishers)
   - [Event Consumers](#event-consumers)
-- [Getting Started](#getting-started)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+
 
 ## System Architecture
+
+### High-Level Architecture
+![System Architecture Diagram](Architecture.svg)
+
+### Request Flow
+![Request Flow](Request-flow.svg)
+
+### Inter-Service Communication
+![Service-to-Service Interaction Diagram](inter-service-communication.svg)
+
+### Message Broker (RabbitMQ)
+![RabbitMQ-message-broker Diagram](RabbitMQ-message-broker.svg)
+
+### Defense-in-Depth Security
+- **Dual Validation**:
+  - API Gateway performs initial JWT validation
+  - All downstream services revalidate tokens via AuthenticationService
+- **Security Context Propagation**:
+  - UserDetailsDto converted to Spring Security Authentication object
+  - Authorities checked at both gateway and service levels
+- **Security Risk Note**:
+  > Warning: JWT secret currently stored in plaintext (application.properties)
 
 ### API Gateway
 - **Central Entry Point**: Handles all incoming requests
@@ -35,12 +56,11 @@ Modern healthcare management platform built with microservices architecture. Fea
   - Role-based access control (RBAC)
   - Rate limiting (requests/sec per service)
 - **Routing**: Forwards authorized requests to appropriate microservices
-- **Integration**: Communicates with AuthenticationService via Feign client
+- **Integration**: Communicates with AuthenticationService via WebClient
 
 ### Authentication & Authorization
 - **JWT Management**:
   - Token issuance/validation
-  - Token revocation list (RL)
 - **Credential Storage**:
   - Encrypted user credentials
   - Role/authority mappings
@@ -68,6 +88,22 @@ Modern healthcare management platform built with microservices architecture. Fea
 - **Inter-Service Auth**:
   - JWT propagation between services
   - Automatic Authentication object creation
+
+## Service Catalog
+
+| Service                | Key Responsibilities                                                                 | Core API Endpoints                                                                                                                                                                                                 | Published Events                                                                 | Consumed Events                                                                 |
+|------------------------|-------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------|---------------------------------------------------------------------------------|
+| **Patient Service**    | Manage patient demographics, medical history, and record lifecycle                  | `GET /patients`<br>`POST /patients`<br>`GET /patients/{id}`<br>`PUT /patients/{id}`<br>`DELETE /patients/{id}`<br>`GET /patients/search`                                                                          | `PatientRegistered`<br>`PatientUpdated`                                        | -                                                                               |
+| **Appointment Service**| Handle scheduling, rescheduling, and cancellation of medical appointments           | `GET /appointments`<br>`POST /appointments`<br>`GET /appointments/{id}`<br>`PUT /appointments/{id}`<br>`DELETE /appointments/{id}`<br>`POST /appointments/{id}/cancel`<br>`POST /appointments/{id}/reschedule`   | `AppointmentCreated`<br>`AppointmentUpdated`<br>`AppointmentCancelled`         | -                                                                               |
+| **Staff Service**      | Manage healthcare staff profiles, availability, and assignments                     | `GET /staff`<br>`POST /staff`<br>`GET /staff/{id}`<br>`PUT /staff/{id}`<br>`DELETE /staff/{id}`<br>`GET /staff/{id}/availability`<br>`GET /staff/{id}/assignments`                                                | -                                                                               | -                                                                               |
+| **Pharmacy Service**   | Process prescriptions, manage medication dispensing, and track drug inventory       | `GET /prescriptions`<br>`POST /prescriptions`<br>`GET /prescriptions/{id}`<br>`POST /prescriptions/{id}/fill`<br>`POST /medications/{id}/dispense`                                                                | `PrescriptionFilled`<br>`MedicationDispensed`                                  | -                                                                               |
+| **Inventory Service**  | Monitor medical supplies, manage stock levels, and handle reordering               | `GET /inventory`<br>`POST /inventory`<br>`GET /inventory/{id}`<br>`PUT /inventory/{id}`<br>`POST /inventory/{id}/reorder`                                                                                         | `StockLow`<br>`StockReplenished`                                               | `MedicationDispensed`                                                          |
+| **Billing & Claims**   | Handle invoicing, insurance claims processing, and payment reconciliation           | `GET /invoices`<br>`POST /invoices`<br>`GET /invoices/{id}`<br>`GET /claims`<br>`POST /claims`<br>`GET /claims/{id}`<br>`POST /claims/{id}/submit`<br>`POST /claims/{id}/deny`                                   | `InvoiceGenerated`<br>`ClaimSubmitted`<br>`ClaimDenied`                        | `AppointmentCreated`<br>`PatientRegistered`                                    |
+| **Audit Logging**      | Maintain system-wide audit trail for compliance and security monitoring             | `GET /audit/events`<br>`GET /audit/events/{id}`                                                                                                                                                                   | -                                                                               | All domain events                                                              |
+| **Notification Service**| Manage real-time alerts via SMS/email for appointments, bills, and system events    | `GET /notifications`<br>`GET /notifications/{id}`<br>`PUT /notifications/config`                                                                                                                                  | -                                                                               | `AppointmentCreated`<br>`AppointmentUpdated`<br>`InvoiceGenerated`<br>`ClaimDenied` |
+| **Analytics Service**  | Provide business intelligence, reporting, and data visualization                    | `GET /analytics/dashboard`<br>`GET /analytics/reports`<br>`GET /analytics/events`                                                                                                                                 | `DashboardUpdated`<br>`ReportGenerated`                                        | All domain events                                                              |
+| **API Gateway**        | Central entry point for routing, security, and request orchestration                | N/A (Infrastructure Layer)                                                                                                                                                                                        | -                                                                               | -                                                                               |
+| **Authentication Service** | Manage user authentication, authorization, and JWT token lifecycle              | `POST /auth/login`<br>`POST /auth/refresh`<br>`POST /auth/introspect`                                                                                                                                             | -                                                                               | -                                                                               |
 
 
 ## REST API Endpoints
