@@ -2,6 +2,58 @@
 
 Modern healthcare management platform built with microservices architecture. Features secure patient data handling, appointment scheduling, pharmacy operations, and real-time analytics with event-driven communication.
 
+---
+
+## 🚀 Production Readiness & Implementation Roadmap
+
+To evolve this PoC into a production-grade platform, we have identified key **issues** in our current setup and outlined **recommendations** to address each. All work is incrementally delivered via our CI/CD pipeline and progress is tracked in [SCHEDULE.md](SCHEDULE.md).
+
+| Domain                           | Current Issue                                                                                                                                                           | Recommendation                                                                                                                                                                                                     | Schedule Step |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------- |
+| **Security & AuthN/Z**           | - No mutual TLS between services<br/>- JWT secret in plaintext<br/>- Token introspection on every request (performance bottleneck)<br/>- No RBAC enforcement downstream | - Implement mTLS (Istio/Linkerd) or Spring Cloud mutual TLS + Vault-issued certs<br/>- Move secrets to Vault (HashiCorp/AWS/Azure)<br/>- Cache introspection results in Redis<br/>- Enforce `@PreAuthorize` scopes | Step 1–3      |
+| **API Gateway & Rate Limiting**  | - In-memory `ConcurrentMap` for rate-limiting (single node)<br/>- Mixed authN and rate-limit code in gateway                                                            | - Use distributed rate limiter (Bucket4j + Redis or Envoy global rate-limit)<br/>- Push rate-limits into dedicated filter or sidecar                                                                               | Step 1–2      |
+| **Resilience & Fault Tolerance** | - No circuit breakers, retries, or bulkheads                                                                                                                            | - Integrate Resilience4j circuit breakers, bulkheads, timeouts, and retries around all WebClient/Feign calls                                                                                                       | Step 1–5      |
+| **Configuration Management**     | - Local `application.properties` per service<br/>- Secrets not versioned or auto-refreshed                                                                              | - Centralize config in Spring Cloud Config or Consul KV<br/>- Encrypt sensitive values in Vault, use `@RefreshScope`                                                                                               | Step 1–19     |
+| **CI/CD & Containerization**     | - CI only compiles; no lint/tests/analysis<br/>- Dockerfiles lack multi-stage best practices<br/>- No image tagging or release strategy                                 | - Extend GitHub Actions: static analysis (Checkstyle/SpotBugs), unit/integration/contract tests, security scans<br/>- Adopt multi-stage Docker builds, non-root images, Trivy scans<br/>- Tag images by SHA/semver | Ongoing       |
+| **Observability**                | - No centralized logging, metrics, or tracing<br/>- No alerts or SLOs                                                                                                   | - Ship JSON logs to ELK/EFK or Loki/Grafana<br/>- Expose Micrometer metrics + Prometheus, create Grafana dashboards<br/>- Add OpenTelemetry/Sleuth + Jaeger<br/>- Define SLOs and Alertmanager rules               | Step 1–19     |
+| **Messaging & Eventing**         | - RabbitMQ unsecured; no schema versioning, retries or DLQs                                                                                                             | - Harden RabbitMQ (TLS, auth, vhosts)<br/>- Adopt a schema registry (Avro/JSON Schema); version events<br/>- Configure DLQs and retry policies                                                                     | Throughout    |
+| **Data Management**              | - No saga/compensation strategy<br/>- Single DB-per-service not strictly enforced<br/>- High‑volume reads not optimized                                                 | - Implement Saga orchestration or choreography<br/>- Enforce data-per-service isolation<br/>- Add read-models (Elasticsearch/Redis) for search/pagination endpoints                                                | Step 1–19     |
+| **Testing Strategy**             | - No contract/consumer tests<br/>- No end-to-end or chaos testing                                                                                                       | - Add Pact or Spring Cloud Contract tests in CI<br/>- Automate E2E flows with REST Assured/Cypress in staging<br/>- Introduce chaos experiments (Chaos Monkey)                                                     | Step 1–19     |
+| **Operational Excellence**       | - No health/readiness probes<br/>- No autoscaling policies<br/>- Missing runbooks and KBs                                                                               | - Add Spring Boot Actuator health checks; configure k8s liveness/readiness<br/>- Define HPA with resource metrics<br/>- Document runbooks for common failures                                                      | Step 1–19     |
+
+> **Note:** Each recommendation above is tracked in [SCHEDULE.md](SCHEDULE.md), and every code change—from schema updates to CI workflow tweaks—is delivered through our GitHub Actions pipeline. Branch-specific workflows build, test, containerize, scan, and publish artifacts automatically.
+
+---
+
+## Table of Contents
+
+* [System Architecture](#system-architecture)
+
+  * [Defense in Depth Security](#defense-in-depth-security)
+  * [API Gateway](#api-gateway)
+  * [Authentication & Authorization](#authentication--authorization)
+  * [Service Registry](#service-registry)
+  * [Resilience Features](#resilience-features)
+* [Service Catalog](#service-catalog)
+* [REST API Endpoints](#rest-api-endpoints)
+
+  * [Patient Service](#patient-service)
+  * [Appointment Service](#appointment-service)
+  * [Staff Service](#staff-service)
+  * [Pharmacy Service](#pharmacy-service)
+  * [Inventory Service](#inventory-service)
+  * [Billing & Claims Service](#billing--claims-service)
+  * [Audit Logging Service](#audit-logging-service)
+  * [Notification Service](#notification-service)
+  * [Analytics Service](#analytics-service)
+* [Event-Driven Architecture](#event-driven-architecture)
+
+  * [Event Publishers](#event-publishers)
+  * [Event Consumers](#event-consumers)
+
+<!-- Rest of README unchanged -->
+
+
 ## Table of Contents
 - [System Architecture](#system-architecture)
   - [Defense in Depth Security](#Defense-in-Depth-Security)
