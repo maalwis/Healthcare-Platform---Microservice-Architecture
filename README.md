@@ -4,7 +4,7 @@ Modern healthcare management platform built with microservices architecture. Fea
 
 ---
 
-## 🚀 Production Readiness & Implementation Roadmap
+## Current Issues
 
 To evolve this PoC into a production-grade platform, we have identified key **issues** in our current setup and outlined **recommendations** to address each. All work is incrementally delivered via our CI/CD pipeline and progress is tracked in [SCHEDULE.md](SCHEDULE.md).
 
