@@ -2,6 +2,7 @@ package com.healthcareplatform.AuditLoggingService.controller;
 
 import com.healthcareplatform.AuditLoggingService.dto.AuditLogDto;
 import com.healthcareplatform.AuditLoggingService.service.AuditLoggingService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1/audit/logs")
 public class AuditLoggingController {
 
+    @Autowired
     private final AuditLoggingService auditLoggingService;
 
     public AuditLoggingController(AuditLoggingService auditLoggingService) {

@@ -4,6 +4,7 @@ import com.healthcareplatform.AnalyticsService.dto.AnalyticsReportDto;
 import com.healthcareplatform.AnalyticsService.dto.AnalyticsRequestDto;
 import com.healthcareplatform.AnalyticsService.service.AnalyticsService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1/analytics/reports")
 public class AnalyticsController {
 
+    @Autowired
     private final AnalyticsService analyticsService;
 
     public AnalyticsController(AnalyticsService analyticsService) {

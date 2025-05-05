@@ -4,6 +4,7 @@ import com.healthcareplatform.InventoryService.dto.InventoryDto;
 import com.healthcareplatform.InventoryService.dto.ReorderRequestDto;
 import com.healthcareplatform.InventoryService.service.InventoryService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1/inventory/items")
 public class InventoryController {
 
+    @Autowired
     private final InventoryService inventoryService;
 
     public InventoryController(InventoryService inventoryService) {

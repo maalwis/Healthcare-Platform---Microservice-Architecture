@@ -6,6 +6,7 @@ import com.healthcareplatform.Gateway.security.jwt.JwtUtils;
 import com.healthcareplatform.Gateway.service.AuthenticationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.core.Ordered;
@@ -13,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,9 +28,14 @@ import java.util.stream.Collectors;
 public class AuthenticationGlobalFilter implements GlobalFilter, Ordered {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationGlobalFilter.class);
+
+    @Autowired
     private final JwtUtils jwtUtils;
+
+    @Autowired
     private final AuthenticationService authenticationService;
 
+    @Autowired
     public AuthenticationGlobalFilter(JwtUtils jwtUtils, AuthenticationService authenticationService) {
         this.jwtUtils = jwtUtils;
         this.authenticationService = authenticationService;

@@ -3,6 +3,7 @@ package com.healthcareplatform.AuthenticationService.controller;
 import com.healthcareplatform.AuthenticationService.dto.LoginRequest;
 import com.healthcareplatform.AuthenticationService.dto.LoginResponse;
 import com.healthcareplatform.AuthenticationService.service.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.Map;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 
+    @Autowired
     private final AuthService authService;
 
     // Constructor injection for AuthService

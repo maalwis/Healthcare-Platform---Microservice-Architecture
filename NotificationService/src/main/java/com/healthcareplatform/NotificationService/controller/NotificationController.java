@@ -3,6 +3,7 @@ package com.healthcareplatform.NotificationService.controller;
 import com.healthcareplatform.NotificationService.dto.NotificationDto;
 import com.healthcareplatform.NotificationService.service.NotificationService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import java.util.List;
 @RequestMapping("/api/v1/notifications")
 public class NotificationController {
 
+    @Autowired
     private final NotificationService notificationService;
 
     public NotificationController(NotificationService notificationService) {

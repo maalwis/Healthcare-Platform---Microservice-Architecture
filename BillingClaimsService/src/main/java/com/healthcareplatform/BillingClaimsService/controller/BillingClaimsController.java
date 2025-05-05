@@ -4,6 +4,7 @@ import com.healthcareplatform.BillingClaimsService.dto.ClaimDto;
 import com.healthcareplatform.BillingClaimsService.dto.InvoiceDto;
 import com.healthcareplatform.BillingClaimsService.service.BillingService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1/billing")
 public class BillingClaimsController {
 
+    @Autowired
     private final BillingService billingService;
 
     public BillingClaimsController(BillingService billingService) {

@@ -5,6 +5,7 @@ import com.healthcareplatform.PatientService.exception.ResourceNotFoundException
 import com.healthcareplatform.PatientService.messaging.publisher.PatientEventPublisher;
 import com.healthcareplatform.PatientService.model.Patient;
 import com.healthcareplatform.PatientService.repository.PatientRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -35,11 +36,13 @@ public class PatientService {
     /**
      * Repository for performing CRUD operations on Patient entities.
      */
+    @Autowired
     private final PatientRepository patientRepository;
 
     /**
      * Event publisher for broadcasting patient registration, and update events.
      */
+    @Autowired
     private final PatientEventPublisher patientEventPublisher;
 
     /**

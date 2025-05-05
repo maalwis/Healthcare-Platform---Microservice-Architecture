@@ -3,6 +3,7 @@ package com.healthcareplatform.PharmacyService.controller;
 import com.healthcareplatform.PharmacyService.dto.PrescriptionDto;
 import com.healthcareplatform.PharmacyService.service.PharmacyService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1/pharmacy/prescriptions")
 public class PharmacyController {
 
+    @Autowired
     private final PharmacyService pharmacyService;
 
     public PharmacyController(PharmacyService pharmacyService) {
@@ -86,7 +88,7 @@ public class PharmacyController {
      * @param prescriptionId Unique identifier of the prescription (path variable)
      * @return ResponseEntity with HTTP 204 No Content on successful fill.
      */
-    @PostMapping("/{id}/fill")
+    @PostMapping("/{id}/dispense")
     public ResponseEntity<Void> dispensePrescription(@PathVariable UUID prescriptionId) {
         pharmacyService.dispensePrescription(prescriptionId);
         return ResponseEntity.noContent().build();

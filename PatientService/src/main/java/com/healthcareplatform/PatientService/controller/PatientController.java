@@ -3,6 +3,7 @@ package com.healthcareplatform.PatientService.controller;
 import com.healthcareplatform.PatientService.dto.PatientDto;
 import com.healthcareplatform.PatientService.service.PatientService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1/patients")
 public class PatientController {
 
+    @Autowired
     private final PatientService patientService;
 
     public PatientController(PatientService patientService) {

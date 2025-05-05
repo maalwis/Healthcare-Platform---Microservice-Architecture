@@ -3,6 +3,7 @@ package com.healthcareplatform.StaffService.controller;
 import com.healthcareplatform.StaffService.dto.StaffDto;
 import com.healthcareplatform.StaffService.service.StaffService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,7 @@ import java.util.UUID;
 @RequestMapping("/api/v1/staff")
 public class StaffController {
 
+    @Autowired
     private final StaffService staffService;
 
     public StaffController(StaffService staffService) {
@@ -73,7 +75,7 @@ public class StaffController {
      * @param staffDto Payload containing updated data (validated request body)
      * @return ResponseEntity containing updated StaffDto and HTTP 200 status.
      */
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/update")
     public ResponseEntity<StaffDto> updateStaff(
             @PathVariable UUID staffId,
             @Valid @RequestBody StaffDto staffDto) {
@@ -89,7 +91,7 @@ public class StaffController {
      * @param staffId Unique identifier of the staff member (path variable)
      * @return ResponseEntity with HTTP 204 No Content on successful deletion.
      */
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}/delete")
     public ResponseEntity<Void> deleteStaff(@PathVariable UUID staffId) {
         staffService.deleteStaff(staffId);
         return ResponseEntity.noContent().build();
@@ -117,7 +119,7 @@ public class StaffController {
      * @param staffId Unique identifier of the staff member (path variable)
      * @return ResponseEntity with HTTP 204 No Content on successful deletion.
      */
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/assignments")
     public ResponseEntity<Void> assignmentsStaff(@PathVariable UUID staffId) {
         staffService.assignmentsStaff(staffId);
         return ResponseEntity.noContent().build();
