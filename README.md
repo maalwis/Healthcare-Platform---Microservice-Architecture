@@ -4,39 +4,32 @@ Modern healthcare management platform built with microservices architecture. Fea
 
 ---
 
-## Current Issues
+## Project Status & CI/CD Integration
 
-To evolve this PoC into a production-grade platform, we have identified key **issues** in our current setup and outlined **recommendations** to address each. All work is incrementally delivered via our CI/CD pipeline and progress is tracked in [SCHEDULE.md](SCHEDULE.md).
+To keep the project organized and transparent:
 
-| Domain                           | Current Issue                                                                                                                                                           | Recommendation                                                                                                                                                                                                     |
-| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Security & AuthN/Z**           | - No mutual TLS between services<br/>- JWT secret in plaintext<br/>- Token introspection on every request (performance bottleneck)<br/>- No RBAC enforcement downstream | - Implement mTLS (Istio/Linkerd) or Spring Cloud mutual TLS + Vault-issued certs<br/>- Move secrets to Vault (HashiCorp/AWS/Azure)<br/>- Cache introspection results in Redis<br/>- Enforce `@PreAuthorize` scopes |
-| **API Gateway & Rate Limiting**  | - In-memory `ConcurrentMap` for rate-limiting (single node)<br/>- Mixed authN and rate-limit code in gateway                                                            | - Use distributed rate limiter (Bucket4j + Redis or Envoy global rate-limit)<br/>- Push rate-limits into dedicated filter or sidecar                                                                               |
-| **Resilience & Fault Tolerance** | - No circuit breakers, retries, or bulkheads                                                                                                                            | - Integrate Resilience4j circuit breakers, bulkheads, timeouts, and retries around all WebClient/Feign calls                                                                                                       |
-| **Configuration Management**     | - Local `application.properties` per service<br/>- Secrets not versioned or auto-refreshed                                                                              | - Centralize config in Spring Cloud Config or Consul KV<br/>- Encrypt sensitive values in Vault, use `@RefreshScope`                                                                                               |
-| **CI/CD & Containerization**     | - CI only compiles; no lint/tests/analysis<br/>- Dockerfiles lack multi-stage best practices<br/>- No image tagging or release strategy                                 | - Extend GitHub Actions: static analysis (Checkstyle/SpotBugs), unit/integration/contract tests, security scans<br/>- Adopt multi-stage Docker builds, non-root images, Trivy scans<br/>- Tag images by SHA/semver |
-| **Observability**                | - No centralized logging, metrics, or tracing<br/>- No alerts or SLOs                                                                                                   | - Ship JSON logs to ELK/EFK or Loki/Grafana<br/>- Expose Micrometer metrics + Prometheus, create Grafana dashboards<br/>- Add OpenTelemetry/Sleuth + Jaeger<br/>- Define SLOs and Alertmanager rules               |
-| **Messaging & Eventing**         | - RabbitMQ unsecured; no schema versioning, retries or DLQs                                                                                                             | - Harden RabbitMQ (TLS, auth, vhosts)<br/>- Adopt a schema registry (Avro/JSON Schema); version events<br/>- Configure DLQs and retry policies                                                                     | 
-| **Data Management**              | - No saga/compensation strategy<br/>- Single DB-per-service not strictly enforced<br/>- High‑volume reads not optimized                                                 | - Implement Saga orchestration or choreography<br/>- Enforce data-per-service isolation<br/>- Add read-models (Elasticsearch/Redis) for search/pagination endpoints                                                |
-| **Testing Strategy**             | - No contract/consumer tests<br/>- No end-to-end or chaos testing                                                                                                       | - Add Pact or Spring Cloud Contract tests in CI<br/>- Automate E2E flows with REST Assured/Cypress in staging<br/>- Introduce chaos experiments (Chaos Monkey)                                                     |
-| **Operational Excellence**       | - No health/readiness probes<br/>- No autoscaling policies<br/>- Missing runbooks and KBs                                                                               | - Add Spring Boot Actuator health checks; configure k8s liveness/readiness<br/>- Define HPA with resource metrics<br/>- Document runbooks for common failures                                                      |
+- **Feature Progress** is tracked in [`SERVICE_ROADMAP.md`](./SERVICE_ROADMAP.md) at the repo root.  You’ll see exactly which endpoints and event‑listeners are ✅ implemented and which are still 🚧 pending.
+- **Infrastructure Progress** lives in [`CROSS_CUTTING.md`](./CROSS_CUTTING.md), detailing what security, resilience, observability, and other cross‑cutting concerns have been put in place and what remains.
 
-> **Note:** Each recommendation above is tracked in [SCHEDULE.md](SCHEDULE.md), and every code change—from schema updates to CI workflow tweaks—is delivered through our GitHub Actions pipeline. Branch-specific workflows build, test, containerize, scan, and publish artifacts automatically.
+Every feature and infrastructure task is delivered via a dedicated **branch‑per‑service** GitHub Actions pipeline:
+
+1. **Build** (compile JAR once, store as artifact)
+2. **Analyze & Test** (Checkstyle, SpotBugs, unit/integration tests, Pact contracts)
+3. **Scan** (Trivy/Snyk vulnerability checks)
+4. **Package** (multi‑stage Docker build → non‑root JRE image)
+5. **Publish** (push to Docker Hub with immutable `${SERVICE_NAME}:${GITHUB_SHA}` tags)
+
+🔗 **Explore the full CI/CD workflows** (YAML definitions & logs):  
+https://github.com/maalwis/Healthcare-Platform---Microservice-Architecture-CICD
+
 
 ---
 
 ## Table of Contents
 
 * [System Architecture](#system-architecture)
-
-  * [Defense in Depth Security](#defense-in-depth-security)
-  * [API Gateway](#api-gateway)
-  * [Authentication & Authorization](#authentication--authorization)
-  * [Service Registry](#service-registry)
-  * [Resilience Features](#resilience-features)
 * [Service Catalog](#service-catalog)
 * [REST API Endpoints](#rest-api-endpoints)
-
   * [Patient Service](#patient-service)
   * [Appointment Service](#appointment-service)
   * [Staff Service](#staff-service)
@@ -47,99 +40,32 @@ To evolve this PoC into a production-grade platform, we have identified key **is
   * [Notification Service](#notification-service)
   * [Analytics Service](#analytics-service)
 * [Event-Driven Architecture](#event-driven-architecture)
-
   * [Event Publishers](#event-publishers)
   * [Event Consumers](#event-consumers)
 
-<!-- Rest of README unchanged -->
-
-
-## Table of Contents
-- [System Architecture](#system-architecture)
-  - [Defense in Depth Security](#Defense-in-Depth-Security)
-  - [API Gateway](#api-gateway)
-  - [Authentication & Authorization](#authentication--authorization)
-  - [Service Registry](#service-registry)
-  - [Resilience Features](#resilience-features)
-- [Service Catalog](#Service-Catalog)
-- [REST API Endpoints](#rest-api-endpoints)
-  - [Patient Service](#patient-service)
-  - [Appointment Service](#appointment-service)
-  - [Staff Service](#staff-service)
-  - [Pharmacy Service](#pharmacy-service)
-  - [Inventory Service](#inventory-service)
-  - [Billing & Claims Service](#billing--claims-service)
-  - [Audit Logging Service](#audit-logging-service)
-  - [Notification Service](#notification-service)
-  - [Analytics Service](#analytics-service)
-- [Event-Driven Architecture](#event-driven-architecture)
-  - [Event Publishers](#event-publishers)
-  - [Event Consumers](#event-consumers)
-
+---
 
 ## System Architecture
 
 ### High-Level Architecture
 ![System Architecture Diagram](Architecture.svg)
 
+---
+
 ### Request Flow
 ![Request Flow](Request-flow.svg)
+
+---
 
 ### Inter-Service Communication
 ![Service-to-Service Interaction Diagram](inter-service-communication.svg)
 
+---
+
 ### Message Broker (RabbitMQ)
 ![RabbitMQ-message-broker Diagram](RabbitMQ-message-broker.svg)
 
-### Defense-in-Depth Security
-- **Dual Validation**:
-  - API Gateway performs initial JWT validation
-  - All downstream services revalidate tokens via AuthenticationService
-- **Security Context Propagation**:
-  - UserDetailsDto converted to Spring Security Authentication object
-  - Authorities checked at both gateway and service levels
-- **Security Risk Note**:
-  > Warning: JWT secret currently stored in plaintext (application.properties)
-
-### API Gateway
-- **Central Entry Point**: Handles all incoming requests
-- **Security Layer**:
-  - JWT validation & token introspection
-  - Role-based access control (RBAC)
-  - Rate limiting (requests/sec per service)
-- **Routing**: Forwards authorized requests to appropriate microservices
-- **Integration**: Communicates with AuthenticationService via WebClient
-
-### Authentication & Authorization
-- **JWT Management**:
-  - Token issuance/validation
-- **Credential Storage**:
-  - Encrypted user credentials
-  - Role/authority mappings
-- **Service Integration**:
-  - Feign clients for token introspection
-  - OAuth2 compliant flows
-
-### Service Registry
-- **Service Discovery**:
-  - Eureka/Consul-based registry
-  - Health checks and status monitoring
-- **Dynamic Routing**:
-  - Logical service names
-  - Instance metadata tracking
-
-### Resilience Features
-- **Circuit Breaking**:
-  - Resilience4J implementation
-  - Fallback mechanisms
-  - Automatic service recovery
-- **Load Balancing**:
-  - Client-side load distribution
-  - Spring Cloud LoadBalancer
-  - Zone-aware routing
-- **Inter-Service Auth**:
-  - JWT propagation between services
-  - Automatic Authentication object creation
+---
 
 ## Service Catalog
 
@@ -157,6 +83,7 @@ To evolve this PoC into a production-grade platform, we have identified key **is
 | **API Gateway**        | Central entry point for routing, security, and request orchestration                | N/A (Infrastructure Layer)                                                                                                                                                                                        | -                                                                               | -                                                                               |
 | **Authentication Service** | Manage user authentication, authorization, and JWT token lifecycle              | `POST /auth/login`<br>`POST /auth/refresh`<br>`POST /auth/introspect`                                                                                                                                             | -                                                                               | -                                                                               |
 
+---
 
 ## REST API Endpoints
 
@@ -170,6 +97,8 @@ To evolve this PoC into a production-grade platform, we have identified key **is
 | DELETE | /api/v1/patients/{id}            | Delete patient record           |
 | GET    | /api/v1/patients/search?criteria | Search patients with criteria   |
 
+---
+
 ### Appointment Service
 | Method | Endpoint                                  | Description                     |
 |--------|-------------------------------------------|---------------------------------|
@@ -180,6 +109,8 @@ To evolve this PoC into a production-grade platform, we have identified key **is
 | DELETE | /api/v1/appointments/{id}                | Cancel appointment             |
 | POST   | /api/v1/appointments/{id}/cancel         | Cancel specific appointment    |
 | POST   | /api/v1/appointments/{id}/reschedule     | Reschedule appointment         |
+
+---
 
 ### Staff Service
 | Method | Endpoint                          | Description                     |
@@ -192,6 +123,8 @@ To evolve this PoC into a production-grade platform, we have identified key **is
 | GET    | /api/v1/staff/{id}/availability  | View staff availability         |
 | GET    | /api/v1/staff/{id}/assignments   | Get staff assignments           |
 
+---
+
 ### Pharmacy Service
 | Method | Endpoint                                  | Description                     |
 |--------|-------------------------------------------|---------------------------------|
@@ -201,6 +134,8 @@ To evolve this PoC into a production-grade platform, we have identified key **is
 | POST   | /api/v1/prescriptions/{id}/fill         | Process prescription filling    |
 | POST   | /api/v1/medications/{id}/dispense       | Dispense medication             |
 
+---
+
 ### Inventory Service
 | Method | Endpoint                          | Description                     |
 |--------|-----------------------------------|---------------------------------|
@@ -209,6 +144,8 @@ To evolve this PoC into a production-grade platform, we have identified key **is
 | GET    | /api/v1/inventory/{id}           | Get inventory item details      |
 | PUT    | /api/v1/inventory/{id}           | Update inventory item           |
 | POST   | /api/v1/inventory/{id}/reorder   | Trigger reorder process         |
+
+--- 
 
 ### Billing & Claims Service
 | Method | Endpoint                          | Description                     |
@@ -222,11 +159,15 @@ To evolve this PoC into a production-grade platform, we have identified key **is
 | POST   | /api/v1/claims/{id}/submit       | Submit claim to insurer        |
 | POST   | /api/v1/claims/{id}/deny         | Deny insurance claim           |
 
+--- 
+
 ### Audit Logging Service
 | Method | Endpoint                          | Description                     |
 |--------|-----------------------------------|---------------------------------|
 | GET    | /api/v1/audit/events             | Retrieve all audit events       |
 | GET    | /api/v1/audit/events/{id}        | Get specific audit event        |
+
+---
 
 ### Notification Service
 | Method | Endpoint                          | Description                     |
@@ -235,6 +176,8 @@ To evolve this PoC into a production-grade platform, we have identified key **is
 | GET    | /api/v1/notifications/{id}       | Get notification details       |
 | PUT    | /api/v1/notifications/config     | Update notification settings   |
 
+--- 
+
 ### Analytics Service
 | Method | Endpoint                          | Description                     |
 |--------|-----------------------------------|---------------------------------|
@@ -242,7 +185,7 @@ To evolve this PoC into a production-grade platform, we have identified key **is
 | GET    | /api/v1/analytics/reports        | Generate analytical reports    |
 | GET    | /api/v1/analytics/events         | Retrieve tracked events        |
 
-
+---
 
 ## Event-Driven Architecture
 
@@ -253,6 +196,8 @@ To evolve this PoC into a production-grade platform, we have identified key **is
 | Appointment        | AppointmentCreated, Updated, Cancelled | Appointment lifecycle changes         |
 | Pharmacy           | PrescriptionFilled, MedicationDispensed | Medication processing events          |
 | Inventory          | StockLow, StockReplenished        | Inventory threshold changes               |
+
+---
 
 ### Event Consumers
 | Service            | Events Consumed                   | Business Logic                             |

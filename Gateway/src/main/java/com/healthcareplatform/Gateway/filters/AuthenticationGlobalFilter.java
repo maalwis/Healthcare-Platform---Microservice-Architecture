@@ -102,52 +102,8 @@ public class AuthenticationGlobalFilter implements GlobalFilter, Ordered {
 
     private boolean checkUserPermissions(List<GrantedAuthority> authorities, String path) {
         // Public endpoints accessible without specific permissions
-        if (path.equals("/login") || path.equals("/csrf-token")) {
+        if (path.equals("/login")) {
             return true;
-        }
-
-        // AuthenticationService endpoints
-        if (path.startsWith("/permissions")) {
-            System.out.println(authorities.stream()
-                    .anyMatch(a -> a.getAuthority().equals("MANAGE_PERMISSIONS")));
-            return authorities.stream()
-                    .anyMatch(a -> a.getAuthority().equals("MANAGE_PERMISSIONS"));
-        }
-
-        if (path.startsWith("/roles")) {
-            List<String> roleEndpointAuthorities = Arrays.asList("MANAGE_PERMISSIONS", "ASSIGN_ROLES");
-
-            return authorities.stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .anyMatch(roleEndpointAuthorities::contains);
-        }
-
-        // AppointmentSchedulingService endpoints
-        if (path.startsWith("/appointments")) {
-            List<String> appointmentsEndpointAuthorities = Arrays.asList("VIEW_SCHEDULING", "MANAGE_APPOINTMENTS");
-
-            return authorities.stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .anyMatch(appointmentsEndpointAuthorities::contains);
-        }
-
-        // PrescriptionService endpoints
-        if (path.startsWith("/prescriptions")) {
-            List<String> prescriptionEndpointAuthorities = Arrays.asList("VIEW_PATIENT_RECORDS", "PROCESS_MEDICAL_ORDERS");
-
-            return authorities.stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .anyMatch(prescriptionEndpointAuthorities::contains);
-        }
-
-        // PatientManagementService endpoints
-        if (path.startsWith("/patients")) {
-            List<String> patientEndpointAuthorities = Arrays.asList("VIEW_PATIENT_RECORDS", "CREATE_PATIENT_RECORDS",
-                    "EDIT_PATIENT_RECORDS", "DELETE_PATIENT_RECORDS");
-
-            return authorities.stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .anyMatch(patientEndpointAuthorities::contains);
         }
 
         // Deny access by default for unrecognized paths
