@@ -9,9 +9,9 @@ Modern healthcare management platform built with microservices architecture. Fea
 To provide clear visibility into both feature delivery and infrastructure readiness, this repository uses two living documents at the root:
 
 - **`SERVICE_ROADMAP.md`**  
-  Tracks per‑service feature progress (endpoints, event‑listeners) with ✅ and pending markers.
+  Tracks per‑service feature progress (endpoints, event‑listeners) with ✅ and pending markers: [`SERVICE_ROADMAP.md`](./SERVICE_ROADMAP.md)
 - **`CROSS_CUTTING.md`**  
-  Captures the current state versus final design for all infrastructure domains, making it obvious what’s in place and what’s next.
+  Captures the current state versus final design for all infrastructure domains, making it obvious what’s in place and what’s next: [`CROSS_CUTTING.md`](./CROSS_CUTTING.md)
 
 Every change is gated through **branch‑per‑service** GitHub Actions pipelines (defined in `.github/workflows`), which:
 
