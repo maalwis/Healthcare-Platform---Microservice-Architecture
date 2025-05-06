@@ -6,22 +6,23 @@ Modern healthcare management platform built with microservices architecture. Fea
 
 ## Project Status & CI/CD Integration
 
-To keep the project organized and transparent:
+To provide clear visibility into both feature delivery and infrastructure readiness, this repository uses two living documents at the root:
 
-- **Feature Progress** is tracked in [`SERVICE_ROADMAP.md`](./SERVICE_ROADMAP.md) at the repo root.  You’ll see exactly which endpoints and event‑listeners are ✅ implemented and which are still 🚧 pending.
-- **Infrastructure Progress** lives in [`CROSS_CUTTING.md`](./CROSS_CUTTING.md), detailing what security, resilience, observability, and other cross‑cutting concerns have been put in place and what remains.
+- **`SERVICE_ROADMAP.md`**  
+  Tracks per‑service feature progress (endpoints, event‑listeners) with ✅ and pending markers.
+- **`CROSS_CUTTING.md`**  
+  Captures the current state versus final design for all infrastructure domains, making it obvious what’s in place and what’s next.
 
-Every feature and infrastructure task is delivered via a dedicated **branch‑per‑service** GitHub Actions pipeline:
+Every change is gated through **branch‑per‑service** GitHub Actions pipelines (defined in `.github/workflows`), which:
 
-1. **Build** (compile JAR once, store as artifact)
-2. **Analyze & Test** (Checkstyle, SpotBugs, unit/integration tests, Pact contracts)
-3. **Scan** (Trivy/Snyk vulnerability checks)
-4. **Package** (multi‑stage Docker build → non‑root JRE image)
-5. **Publish** (push to Docker Hub with immutable `${SERVICE_NAME}:${GITHUB_SHA}` tags)
+- Build and test each service on every push
+- Scan and publish Docker images to Docker Hub
+- Automatically apply any infra updates that correspond to entries in `CROSS_CUTTING.md`
 
-🔗 **Explore the full CI/CD workflows** (YAML definitions & logs):  
+Status badges for each service pipeline are displayed at the top of this README, offering instant feedback on build health and deployment readiness.
+
+🔗 **Explore the full CI/CD workflows & status badges**:  
 https://github.com/maalwis/Healthcare-Platform---Microservice-Architecture-CICD
-
 
 ---
 
@@ -47,23 +48,32 @@ https://github.com/maalwis/Healthcare-Platform---Microservice-Architecture-CICD
 
 ## System Architecture
 
+### System Context
+![System Context Diagram](docs/diagrams/SystemContext.svg)
+
+---
+
 ### High-Level Architecture
-![System Architecture Diagram](Architecture.svg)
+![System Architecture Diagram](docs/diagrams/Architecture.svg)
+
+---
+### Security Architecture
+![Security Architecture Diagram](docs/diagrams/security-architecture-diagram.svg)
 
 ---
 
 ### Request Flow
-![Request Flow](Request-flow.svg)
+![Request Flow](docs/diagrams/Request-flow.svg)
 
 ---
 
 ### Inter-Service Communication
-![Service-to-Service Interaction Diagram](inter-service-communication.svg)
+![Service-to-Service Interaction Diagram](docs/diagrams/inter-service-communication.svg)
 
 ---
 
 ### Message Broker (RabbitMQ)
-![RabbitMQ-message-broker Diagram](RabbitMQ-message-broker.svg)
+![RabbitMQ-message-broker Diagram](docs/diagrams/RabbitMQ-message-broker.svg)
 
 ---
 
