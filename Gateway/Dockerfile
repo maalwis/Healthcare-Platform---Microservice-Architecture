@@ -19,8 +19,6 @@ COPY --from=build /app/target/*.jar /app/app.jar
 RUN chown -R appuser:appgroup /app
 USER appuser
 
-EXPOSE 9090
-
 ENV SPRING_CONFIG_LOCATION=classpath:/application-docker.properties
 
 ENTRYPOINT ["java", "-XX:MaxRAMPercentage=80.0", "-jar", "/app/app.jar"]
