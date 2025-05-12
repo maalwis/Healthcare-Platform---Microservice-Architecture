@@ -1,7 +1,9 @@
 package com.healthcareplatform.AuthenticationService.config.database;
 
-import com.healthcareplatform.AuthenticationService.model.*;
-import com.healthcareplatform.AuthenticationService.repository.*;
+import com.healthcareplatform.AuthenticationService.permission.*;
+import com.healthcareplatform.AuthenticationService.role.*;
+import com.healthcareplatform.AuthenticationService.user.*;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,7 +22,6 @@ public class InitializationService {
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserProfileRepository userProfileRepository;
 
     @Autowired
     public InitializationService(
@@ -29,8 +30,8 @@ public class InitializationService {
             RolePermissionRepository rolePermissionRepository,
             UserRepository userRepository,
             UserRoleRepository userRoleRepository,
-            PasswordEncoder passwordEncoder,
-            UserProfileRepository userProfileRepository) {
+            PasswordEncoder passwordEncoder
+            ) {
 
         this.permissionRepository = permissionRepository;
         this.roleRepository = roleRepository;
@@ -38,7 +39,7 @@ public class InitializationService {
         this.userRepository = userRepository;
         this.userRoleRepository = userRoleRepository;
         this.passwordEncoder = passwordEncoder;
-        this.userProfileRepository = userProfileRepository;
+
     }
 
     /**
@@ -108,13 +109,25 @@ public class InitializationService {
         // Define users with professional names and additional fields
         List<UserCreationData> userDataList = Arrays.asList(
                 new UserCreationData(
+                        "dev-test",       // Full name
+                        "dev-user",                // Keep original username
+                        "dev@example.com",         // Keep original email
+                        "pass",                    // Password
+                        "dev-001",                 // Employee ID
+                        LocalDateTime.now(),       // Hire date
+                        RoleEnum.DEV_USER,
+                        "custom email"
+                ),
+
+                new UserCreationData(
                         "Eleanor Prescott",       // Full name
                         "ceo_user",                // Keep original username
                         "ceo@example.com",         // Keep original email
                         "pass",                    // Password
                         "EMP-001",                 // Employee ID
                         LocalDateTime.now(),       // Hire date
-                        RoleEnum.CHIEF_EXECUTIVE_OFFICER
+                        RoleEnum.CHIEF_EXECUTIVE_OFFICER,
+                        "custom email"
                 ),
                 new UserCreationData(
                         "Julian Whitmore",
@@ -123,7 +136,8 @@ public class InitializationService {
                         "pass",
                         "EMP-002",
                         LocalDateTime.now(),
-                        RoleEnum.DEPARTMENT_HEAD_CARDIOLOGY
+                        RoleEnum.DEPARTMENT_HEAD_CARDIOLOGY,
+                        "custom email"
                 ),
                 new UserCreationData(
                         "Marcus Reynolds",
@@ -132,7 +146,8 @@ public class InitializationService {
                         "pass",
                         "EMP-003",
                         LocalDateTime.now(),
-                        RoleEnum.PHYSICIAN_GENERAL
+                        RoleEnum.PHYSICIAN_GENERAL,
+                        "custom email"
                 ),
                 new UserCreationData(
                         "Gabrielle Sinclair",
@@ -141,7 +156,8 @@ public class InitializationService {
                         "pass",
                         "EMP-004",
                         LocalDateTime.now(),
-                        RoleEnum.SURGEON_GENERAL
+                        RoleEnum.SURGEON_GENERAL,
+                        "custom email"
                 ),
                 new UserCreationData(
                         "Clara Bennett",
@@ -150,7 +166,8 @@ public class InitializationService {
                         "pass",
                         "EMP-005",
                         LocalDateTime.now(),
-                        RoleEnum.NURSE_REGISTERED
+                        RoleEnum.NURSE_REGISTERED,
+                        "custom email"
                 ),
                 new UserCreationData(
                         "Victor Nakamura",
@@ -159,7 +176,8 @@ public class InitializationService {
                         "pass",
                         "EMP-006",
                         LocalDateTime.now(),
-                        RoleEnum.IT_STAFF
+                        RoleEnum.IT_STAFF,
+                        "custom email"
                 ),
                 new UserCreationData(
                         "Lydia Chen",
@@ -168,7 +186,8 @@ public class InitializationService {
                         "pass",
                         "EMP-007",
                         LocalDateTime.now(),
-                        RoleEnum.PHARMACIST
+                        RoleEnum.PHARMACIST,
+                        "custom email"
                 ),
                 new UserCreationData(
                         "Oscar Fitzgerald",
@@ -177,7 +196,8 @@ public class InitializationService {
                         "pass",
                         "EMP-008",
                         LocalDateTime.now(),
-                        RoleEnum.LABORATORY_TECHNICIAN
+                        RoleEnum.LABORATORY_TECHNICIAN,
+                        "custom email"
                 ),
                 new UserCreationData(
                         "Amelia Winslow",
@@ -186,7 +206,8 @@ public class InitializationService {
                         "pass",
                         "EMP-009",
                         LocalDateTime.now(),
-                        RoleEnum.RECEPTIONIST
+                        RoleEnum.RECEPTIONIST,
+                        "custom email"
                 )
         );
 
@@ -194,9 +215,12 @@ public class InitializationService {
             if (userRepository.findByUsername(userData.getUsername()).isEmpty()) {
                 // Create user
                 User user = new User();
+                user.setEmployeeId(userData.getEmployeeId());
+                user.setFullName(userData.getFullName());
                 user.setUserName(userData.getUsername());
                 user.setEmail(userData.getEmail());
                 user.setPassword(passwordEncoder.encode(userData.getPassword()));
+                user.setHireDate(userData.getHireDate());
 
                 // Account status flags
                 user.setAccountNonLocked(true);
@@ -212,15 +236,10 @@ public class InitializationService {
                 user.setTwoFactorSecret("manual");
                 user.setTwoFactorEnabled(false);
 
-                userRepository.save(user);
+                // Signed up method
+                user.setSignUpMethod(userData.getSignUpMethod());
 
-                // Create profile with additional fields
-                UserProfile profile = new UserProfile();
-                profile.setUser(user);
-                profile.setFullName(userData.getFullName());
-                profile.setHireDate(userData.getHireDate());
-                profile.setEmployeeId(userData.getEmployeeId());
-                userProfileRepository.save(profile);
+                userRepository.save(user);
 
                 // Assign role
                 Role role = roleMap.get(userData.getRoleEnum());
@@ -239,6 +258,7 @@ public class InitializationService {
     /**
      * Helper class to hold user creation data.
      */
+    @Getter
     private static class UserCreationData {
         private final String fullName;
         private final String username;
@@ -247,9 +267,11 @@ public class InitializationService {
         private final String employeeId;
         private final LocalDateTime hireDate;
         private final RoleEnum roleEnum;
+        private final String signUpMethod;
+
 
         public UserCreationData(String fullName, String username, String email, String password,
-                                String employeeId, LocalDateTime hireDate, RoleEnum roleEnum) {
+                                String employeeId, LocalDateTime hireDate, RoleEnum roleEnum, String signUpMethod) {
             this.fullName = fullName;
             this.username = username;
             this.email = email;
@@ -257,35 +279,9 @@ public class InitializationService {
             this.employeeId = employeeId;
             this.hireDate = hireDate;
             this.roleEnum = roleEnum;
+            this.signUpMethod = signUpMethod;
         }
 
-        public String getFullName() {
-            return fullName;
-        }
-
-        public String getUsername() {
-            return username;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public String getPassword() {
-            return password;
-        }
-
-        public String getEmployeeId() {
-            return employeeId;
-        }
-
-        public LocalDateTime getHireDate() {
-            return hireDate;
-        }
-
-        public RoleEnum getRoleEnum() {
-            return roleEnum;
-        }
     }
 
     /**
@@ -294,6 +290,14 @@ public class InitializationService {
      * @return List of PermissionEnum values applicable to the role.
      */
     private List<PermissionEnum> getPermissionsForRole(String roleName) {
+        // Assigns all the permission to the DEV_USER
+        if(roleName.contains("development_engineering")) {
+            // EnumSet.of all values in PermissionEnum
+            Set<PermissionEnum> allPerms = EnumSet.allOf(PermissionEnum.class);
+            // If you really need a List:
+            return new ArrayList<>(allPerms);
+        }
+
         // Chief/Officer roles (e.g., CEO, COO, CFO, CMO) - broad administrative permissions
         if (roleName.contains("Chief") || roleName.contains("Officer")) {
             return Arrays.asList(
@@ -375,6 +379,7 @@ public class InitializationService {
                     PermissionEnum.EDIT_BILLING
             );
         }
+
         // Default case - minimal permissions for unclassified roles (e.g., Housekeeping, Transport)
         else {
             return List.of(

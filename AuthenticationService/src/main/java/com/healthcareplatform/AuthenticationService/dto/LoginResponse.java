@@ -1,43 +1,20 @@
 package com.healthcareplatform.AuthenticationService.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.List;
 
-// LoginResponse.java
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class LoginResponse {
-    private String jwtToken;
-
     private String username;
+    private String jwtToken;
     private List<GrantedAuthority> permissions;
 
-    public LoginResponse(String username, List<GrantedAuthority> permissions, String jwtToken) {
-        this.username = username;
-        this.permissions = permissions;
-        this.jwtToken = jwtToken;
-    }
-
-    public String getJwtToken() {
-        return jwtToken;
-    }
-
-    public void setJwtToken(String jwtToken) {
-        this.jwtToken = jwtToken;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public List<GrantedAuthority> getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(List<GrantedAuthority> permissions) {
-        this.permissions = permissions;
-    }
 }

@@ -1,7 +1,7 @@
 package com.healthcareplatform.AuthenticationService.userdetails;
 
-import com.healthcareplatform.AuthenticationService.model.User;
-import com.healthcareplatform.AuthenticationService.repository.UserRepository;
+import com.healthcareplatform.AuthenticationService.user.User;
+import com.healthcareplatform.AuthenticationService.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

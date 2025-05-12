@@ -1,8 +1,7 @@
-package com.healthcareplatform.AuthenticationService.controller;
+package com.healthcareplatform.AuthenticationService.validation;
 
 
 import com.healthcareplatform.AuthenticationService.dto.UserDTO;
-import com.healthcareplatform.AuthenticationService.service.ValidateTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

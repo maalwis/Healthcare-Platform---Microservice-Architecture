@@ -1,5 +1,6 @@
-package com.healthcareplatform.AuthenticationService.model;
+package com.healthcareplatform.AuthenticationService.permission;
 
+import com.healthcareplatform.AuthenticationService.role.RolePermission;
 import jakarta.persistence.*;
 import java.util.Set;
 

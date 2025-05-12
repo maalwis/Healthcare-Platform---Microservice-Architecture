@@ -1,4 +1,4 @@
-package com.healthcareplatform.AuthenticationService.model;
+package com.healthcareplatform.AuthenticationService.permission;
 
 public enum PermissionEnum {
 

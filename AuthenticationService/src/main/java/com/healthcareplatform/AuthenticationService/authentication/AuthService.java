@@ -1,8 +1,8 @@
-package com.healthcareplatform.AuthenticationService.service;
+package com.healthcareplatform.AuthenticationService.authentication;
 
 import com.healthcareplatform.AuthenticationService.dto.LoginRequest;
 import com.healthcareplatform.AuthenticationService.dto.LoginResponse;
-import com.healthcareplatform.AuthenticationService.security.jwt.JwtUtils;
+import com.healthcareplatform.AuthenticationService.jwtSecurityFilter.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -54,7 +54,7 @@ public class AuthService {
             List<GrantedAuthority> authorities = jwtUtils.getAuthoritiesFromJwtToken(jwtToken);
 
             // Build and return the response including username, authorities, and JWT token
-            return new LoginResponse(userDetails.getUsername(), authorities, jwtToken);
+            return new LoginResponse(userDetails.getUsername(), jwtToken, authorities);
         } catch (AuthenticationException ex) {
             throw new RuntimeException("Bad credentials");
         }

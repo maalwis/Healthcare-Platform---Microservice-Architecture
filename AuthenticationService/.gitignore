@@ -34,6 +34,6 @@ build/
 
 README.md
 
-/src/main/java/com/healthcareplatform/AuthenticationService/controller/TestController.java
+/src/main/java/com/healthcareplatform/AuthenticationService/validation/TestController.java
 
 

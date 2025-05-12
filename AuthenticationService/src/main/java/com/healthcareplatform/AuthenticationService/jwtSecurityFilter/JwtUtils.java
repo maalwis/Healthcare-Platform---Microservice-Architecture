@@ -1,4 +1,4 @@
-package com.healthcareplatform.AuthenticationService.security.jwt;
+package com.healthcareplatform.AuthenticationService.jwtSecurityFilter;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;

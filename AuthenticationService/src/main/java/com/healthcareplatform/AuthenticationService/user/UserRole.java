@@ -1,5 +1,7 @@
-package com.healthcareplatform.AuthenticationService.model;
+package com.healthcareplatform.AuthenticationService.user;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.healthcareplatform.AuthenticationService.role.Role;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -14,11 +16,13 @@ public class UserRole {
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "user_id")
+    @JsonBackReference   // <-- omit the back-pointer when serializing
     private User user;
 
     @ManyToOne
     @MapsId("roleId")
     @JoinColumn(name = "role_id")
+    @JsonBackReference   // <-- omit the back-pointer when serializing
     private Role role;
 
     @Column(nullable = false)

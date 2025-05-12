@@ -1,4 +1,4 @@
-package com.healthcareplatform.AuthenticationService.model;
+package com.healthcareplatform.AuthenticationService.role;
 
 
 public enum RoleEnum {
@@ -122,8 +122,8 @@ public enum RoleEnum {
             "Biomedical Engineering"),
     EQUIPMENT_TECHNICIAN("Equipment Technician",
             "Biomedical Engineering"),
-    VOLUNTEER_COORDINATOR("Volunteer Coordinator",
-            "Administration");
+    VOLUNTEER_COORDINATOR("Volunteer Coordinator", "Administration"),
+    DEV_USER("development_engineering", "IT");
 
     private final String roleName;
 

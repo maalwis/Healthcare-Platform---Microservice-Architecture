@@ -1,4 +1,4 @@
-package com.healthcareplatform.AuthenticationService.model;
+package com.healthcareplatform.AuthenticationService.role;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

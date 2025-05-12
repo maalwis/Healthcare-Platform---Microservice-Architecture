@@ -1,4 +1,4 @@
-package com.healthcareplatform.AuthenticationService.security.jwt;
+package com.healthcareplatform.AuthenticationService.jwtSecurityFilter;
 
 import com.healthcareplatform.AuthenticationService.userdetails.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;

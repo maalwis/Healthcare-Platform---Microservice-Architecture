@@ -1,7 +1,7 @@
-package com.healthcareplatform.AuthenticationService.service;
+package com.healthcareplatform.AuthenticationService.validation;
 
 import com.healthcareplatform.AuthenticationService.dto.UserDTO;
-import com.healthcareplatform.AuthenticationService.security.jwt.JwtUtils;
+import com.healthcareplatform.AuthenticationService.jwtSecurityFilter.JwtUtils;
 import com.healthcareplatform.AuthenticationService.userdetails.UserDetailsServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;

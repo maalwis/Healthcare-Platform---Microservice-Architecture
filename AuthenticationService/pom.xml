@@ -12,7 +12,9 @@
 	<artifactId>AuthenticationService</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>AuthenticationService</name>
-	<description>Authentication Service handles user authentication and authorization, enforces role-based access control (RBAC), and manages the generation and validation of security tokens.</description>
+	<description>Authentication Service handles user authentication and authorization,
+		enforces role-based access control (RBAC), and manages the generation and validation of security tokens.
+	</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -123,6 +125,34 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-inline -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-inline</artifactId>
+			<version>3.3.3</version>
 			<scope>test</scope>
 		</dependency>
 
