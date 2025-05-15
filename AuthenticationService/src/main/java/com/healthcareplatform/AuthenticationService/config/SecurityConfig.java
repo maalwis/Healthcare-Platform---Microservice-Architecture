@@ -27,6 +27,7 @@ public class SecurityConfig {
                 csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .ignoringRequestMatchers(
                                 "/api/v1/auth/login",
+                                "api/v1/users",
                                 "/api/v1/private/validateToken"));
 
         http.authorizeHttpRequests(requests ->
