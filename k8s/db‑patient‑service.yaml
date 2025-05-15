@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-patient
+spec:
+  selector:
+    app: db-patient
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432

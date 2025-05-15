@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-analytic
+spec:
+  selector:
+    app: db-analytic
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432

@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pharmacy-service
+spec:
+  selector:
+    app: pharmacy-service
+  ports:
+    - protocol: TCP
+      port: 9194
+      targetPort: 9194

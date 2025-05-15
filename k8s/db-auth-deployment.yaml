@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-auth
+  template:
+    metadata:
+      labels:
+        app: db-auth
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:latest  # Pulled from Docker Hub
+          env:
+            - name: POSTGRES_DB
+              value: AuthenticationService
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: alwis
+          ports:
+            - containerPort: 5432

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-pharmacy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-pharmacy
+  template:
+    metadata:
+      labels:
+        app: db-pharmacy
+    spec:
+      containers:
+        - name: postgres
+          image: postgres
+          env:
+            - name: POSTGRES_DB
+              value: PharmacyService
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: alwis
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: pharmacy-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: pharmacy-data
+          hostPath:
+            path: /data/db-pharmacy
+            type: DirectoryOrCreate

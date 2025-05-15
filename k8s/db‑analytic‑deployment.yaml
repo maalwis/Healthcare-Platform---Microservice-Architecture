@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-analytic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-analytic
+  template:
+    metadata:
+      labels:
+        app: db-analytic
+    spec:
+      containers:
+        - name: postgres
+          image: postgres
+          env:
+            - name: POSTGRES_DB
+              value: AnalyticsService
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: alwis
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: analytic-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: analytic-data
+          hostPath:
+            path: /data/db-analytic
+            type: DirectoryOrCreate

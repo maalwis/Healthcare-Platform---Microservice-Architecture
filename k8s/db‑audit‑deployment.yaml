@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-audit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-audit
+  template:
+    metadata:
+      labels:
+        app: db-audit
+    spec:
+      containers:
+        - name: postgres
+          image: postgres
+          env:
+            - name: POSTGRES_DB
+              value: AuditLoggingService
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: alwis
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: audit-data
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: audit-data
+          hostPath:
+            path: /data/db-audit
+            type: DirectoryOrCreate
