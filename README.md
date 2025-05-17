@@ -7,8 +7,23 @@ appointment scheduling, pharmacy operations, and real-time analytics with event-
 
 ## Project Status & CI/CD Integration
 
-To provide clear visibility into both feature delivery and infrastructure readiness, this repository uses two living
-documents at the root:
+<!-- existing badges here -->
+
+### 🔨 Current Focus
+
+#### AuthenticationService https://github.com/maalwis/Healthcare-Platform---Microservice-Architecture/tree/main/AuthenticationService
+- **REST API Design**  
+  Defining and documenting new endpoints (request/response schemas, payload validation)
+- **Unit Testing**  
+  Writing JUnit tests to cover core authentication flows
+- **Integration Testing**  
+  End‑to‑end tests against UserService, TokenService, DB
+- **Secrets Management**  
+  Implementing HashiCorp Vault for secure storage and rotation of our API keys and DB credentials
+
+---
+
+To provide clear visibility into both feature delivery and infrastructure readiness, this repository uses two living documents at the root:
 
 - **`SERVICE_ROADMAP.md`**  
   Tracks per‑service feature progress (endpoints, event‑listeners) with ✅ and pending markers: [
@@ -17,7 +32,7 @@ documents at the root:
   Captures the current state versus final design for all infrastructure domains, making it obvious what’s in place and
   what’s next: [`CROSS_CUTTING.md`](./CROSS_CUTTING.md)
 
-Every change is gated through **branch‑per‑service** GitHub Actions pipelines (defined in`.github/workflows`), which:
+Every change is gated through **branch‑per‑service** GitHub Actions pipelines (defined in `.github/workflows`), which:
 
 - Build and test each service on every push
 - Scan and publish Docker images to Docker Hub
@@ -28,6 +43,7 @@ health and deployment readiness.
 
 🔗**Explore the full CI/CD workflows & status badges**:  
 https://github.com/maalwis/Healthcare-Platform---Microservice-Architecture-CICD
+
 
 ---
 
