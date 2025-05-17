@@ -156,6 +156,12 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- Vault support -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-vault-config</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<dependencyManagement>

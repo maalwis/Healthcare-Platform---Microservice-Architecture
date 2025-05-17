@@ -1,11 +1,13 @@
 package com.healthcareplatform.AuthenticationService.jwtSecurityFilter;
 
+import com.healthcareplatform.AuthenticationService.config.VaultConfig;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,11 +24,8 @@ import java.util.stream.Collectors;
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    @Value("${spring.app.jwtSecret}")
-    private String jwtSecret;
-
-    @Value("${spring.app.jwtExpirationMs}")
-    private int jwtExpirationMs;
+    @Autowired
+    private VaultConfig vaultConfig;
 
     public String getJwtFromHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
@@ -49,7 +48,7 @@ public class JwtUtils {
                 .setSubject(userDetails.getUsername())
                 .claim("permissions", permissions) // adding roles as a claim
                 .setIssuedAt(new Date())
-                .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .setExpiration(new Date((new Date()).getTime() + vaultConfig.getJwtExpirationMs()))
                 .signWith(key())
                 .compact();
     }
@@ -91,7 +90,7 @@ public class JwtUtils {
     }
 
     private Key key() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(vaultConfig.getJwtToken()));
     }
 
     public boolean validateJwtToken(String authToken) {
