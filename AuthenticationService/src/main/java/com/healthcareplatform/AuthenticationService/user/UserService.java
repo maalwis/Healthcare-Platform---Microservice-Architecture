@@ -1,41 +1,42 @@
 package com.healthcareplatform.AuthenticationService.user;
 
+import com.healthcareplatform.AuthenticationService.dto.*;
 import com.healthcareplatform.AuthenticationService.exception.EmailAlreadyExistsException;
 import com.healthcareplatform.AuthenticationService.exception.ResourceNotFoundException;
 import com.healthcareplatform.AuthenticationService.exception.UsernameAlreadyExistsException;
+import com.healthcareplatform.AuthenticationService.userdetails.UserDetailsImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Clock;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class UserService {
 
+    private static final String SIGNUP_METHOD_EMAIL = "EMAIL";
     @Autowired
     private final UserRepository userRepository;
     @Autowired
     private final PasswordEncoder passwordEncoder;
-
     private final int credentialsExpiryMonths;
     private final int accountExpiryMonths;
-    private static final String SIGNUP_METHOD_EMAIL = "EMAIL";
 
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
                        @Value("${user.credentials-expiry-months}") int credentialsExpiryMonths,
                        @Value("${user.account-expiry-months}") int accountExpiryMonths
-                       ) {
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.credentialsExpiryMonths = credentialsExpiryMonths;
@@ -62,20 +63,10 @@ public class UserService {
 
     /**
      * Retrieve a specific user by their userId.
-     * <p>
-     * Runs within a read-only transaction. Throws a ResourceNotFoundException
-     * if no matching patient is found.
-     *
-     * @param userId Long of the patient to retrieve
-     * @return UserResponse representing the found patient
-     * @throws ResourceNotFoundException if patient with given id does not exist
-     * @throws DataAccessException       if a database access error occurs
      */
-    @Transactional(readOnly = true)
     public UserResponse getUserById(Long userId) {
-        // attempt to find the Patient entity by ID
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("user not found with userId: " + userId));
+        // call the helper method to retrieve the user
+        User user = getUserByIdHelper(userId);
         // convert found entity to DTO
         return mapToDto(user);
     }
@@ -139,26 +130,103 @@ public class UserService {
     }
 
     /**
-     * Update an existing user’s details.
+     * {@inheritDoc}
+     * <p>Ensures the new username is unique before updating.</p>
      *
-     * <p>Fetches the User by {@code userId}, applies the changes from
-     * the given {@link UserRequest}, and persists the updated entity.
-     * Returns a {@link UserResponse} reflecting the new state.</p>
-     *
-     * @param userId       the database ID of the user to update
-     * @param userRequest  the validated DTO containing new user data
-     * @return the updated user as a response DTO
-     * @throws ResourceNotFoundException      if no user exists with the given ID
-     * @throws UsernameAlreadyExistsException if the new username is already taken by another user
-     * @throws EmailAlreadyExistsException    if the new email is already taken by another user
+     * @param userDetails     the authenticated principal
+     * @param updateUsername  validated DTO with the new username
+     * @return updated user as {@link UserResponse}
+     * @throws UsernameAlreadyExistsException if the username is taken
+     * @throws ResourceNotFoundException      if the user does not exist
+     * @throws DataAccessException            on DB errors
      */
-    public UserResponse updateUser(Long userId, @Valid UserRequest userRequest) {
-        // TODO: Look up the existing User entity (or throw ResourceNotFoundException)
-        // TODO: Check for username/email uniqueness (skip the same user)
-        // TODO: Apply changes from userRequest to the User
-        // TODO: Save and flush the updated User
-        // TODO: Map to UserResponse and return
-        return null;
+    @Transactional
+    public UserResponse updateUsername(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                       @Valid UpdateUsername updateUsername) {
+        String newUserName = updateUsername.getUsername();
+
+        // 1. Uniqueness checks (race still possible; catch on save below)
+        if (userRepository.existsByUsername(newUserName)) {
+            throw new UsernameAlreadyExistsException(newUserName);
+        }
+
+        User user = getUserByIdHelper(userDetails.getId());
+        user.setUserName(newUserName);
+
+        User saved = userRepository.save(user);
+
+        return mapToDto(saved);
+    }
+
+    /**
+     * Updates the user's full name.
+     *
+     * @param userDetails     the authenticated principal
+     * @param updateFullName  validated DTO with the new full name
+     * @return updated user as {@link UserResponse}
+     * @throws ResourceNotFoundException if the user does not exist
+     * @throws DataAccessException       on DB errors
+     */
+    @Transactional
+    public UserResponse updateFullName(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                       @Valid UpdateFullName updateFullName) {
+        String newFullName = updateFullName.getFullName();
+
+        User user = getUserByIdHelper(userDetails.getId());
+        user.setFullName(newFullName);
+
+        User saved = userRepository.save(user);
+
+        return mapToDto(saved);
+    }
+
+    /**
+     * Changes the user's password (stored as a BCrypt hash).
+     *
+     * @param userDetails     the authenticated principal
+     * @param updatePassword  validated DTO with the new password
+     * @return updated user as {@link UserResponse}
+     * @throws ResourceNotFoundException if the user does not exist
+     * @throws DataAccessException       on DB errors
+     */
+    @Transactional
+    public UserResponse updatePassword(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                       @Valid  UpdatePassword updatePassword) {
+
+        User user = getUserByIdHelper(userDetails.getId());
+        user.setPassword(passwordEncoder.encode(updatePassword.getNewPassword()));
+
+        User saved = userRepository.save(user);
+
+        return mapToDto(saved);
+    }
+
+    /**
+     * Updates the user's email after ensuring uniqueness.
+     *
+     * @param userDetails  the authenticated principal
+     * @param updateEmail  validated DTO with the new email
+     * @return updated user as {@link UserResponse}
+     * @throws EmailAlreadyExistsException if the email is already used
+     * @throws ResourceNotFoundException   if the user does not exist
+     * @throws DataAccessException         on DB errors
+     */
+    @Transactional
+    public UserResponse updateEmail(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                       @Valid UpdateEmail updateEmail) {
+
+        String newEmail = updateEmail.getEmail();
+
+        if (userRepository.existsByEmail(updateEmail.getEmail())) {
+            throw new EmailAlreadyExistsException(newEmail);
+        }
+
+        User user = getUserByIdHelper(userDetails.getId());
+        user.setEmail(newEmail);
+
+        User saved = userRepository.save(user);
+
+        return mapToDto(saved);
     }
 
     /**
@@ -167,7 +235,7 @@ public class UserService {
      * <p>Performs a soft delete by disabling the account and setting
      * an expiry date, or a hard delete if your policy dictates.</p>
      *
-     * @param userId  the database ID of the user to delete
+     * @param userId the database ID of the user to delete
      * @throws ResourceNotFoundException if no user exists with the given ID
      */
     public void deleteUser(Long userId) {
@@ -179,7 +247,27 @@ public class UserService {
         return;
     }
 
-    // Helper method to map user entity to userResponse
+    /**
+     * Fetches a {@link User} by ID in a read-only transaction.
+     *
+     * @param userId the database ID of the user
+     * @return the matching {@link User} entity
+     * @throws ResourceNotFoundException if no user is found
+     * @throws DataAccessException       on DB errors
+     */
+    @Transactional(readOnly = true)
+    private User getUserByIdHelper(Long userId) {
+        // attempt to find the Patient entity by ID
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("user not found with userId: " + userId));
+    }
+
+    /**
+     * Maps a {@link User} entity to its external {@link UserResponse} representation.
+     *
+     * @param user the entity to map
+     * @return the DTO containing user data for clients
+     */
     private UserResponse mapToDto(User user) {
         return new UserResponse(
                 user.getUserId(),
@@ -196,7 +284,18 @@ public class UserService {
         );
     }
 
-    // Helper method to map UserRequest to user entity
+    /**
+     * Maps a creation or update request DTO to a new User entity.
+     * <p>
+     * This helper method populates a fresh User instance with values
+     * from the provided {@link UserRequest} DTO. It does not perform any
+     * persistence or validation beyond the DTO’s own constraints.
+     * </p>
+     *
+     * @param dto the incoming request containing user details:
+     *            full name, username, email, and temporary password
+     * @return a new {@link User} entity ready for persistence
+     */
     private User mapToEntity(UserRequest dto) {
         User user = new User();
         user.setFullName(dto.getFullName());

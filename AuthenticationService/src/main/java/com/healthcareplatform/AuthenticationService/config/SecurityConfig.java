@@ -27,14 +27,14 @@ public class SecurityConfig {
                 csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .ignoringRequestMatchers(
                                 "/api/v1/auth/login",
-                                "api/v1/users",
+                                "api/v1/user/profile/**",
                                 "/api/v1/private/validateToken"));
 
         http.authorizeHttpRequests(requests ->
                 requests
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/api/v1/auth/login").permitAll()
-                        .requestMatchers("/api/v1/users/**").hasAuthority("MANAGE_PERMISSIONS")
+                        .requestMatchers("/api/v1/user/profile/**").authenticated()
 
                         .anyRequest().authenticated());
         http.exceptionHandling(exception -> exception.authenticationEntryPoint(authEntryPointJwt));

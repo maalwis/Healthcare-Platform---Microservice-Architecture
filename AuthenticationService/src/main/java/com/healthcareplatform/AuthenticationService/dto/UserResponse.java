@@ -1,6 +1,7 @@
-package com.healthcareplatform.AuthenticationService.user;
+package com.healthcareplatform.AuthenticationService.dto;
 
 
+import com.healthcareplatform.AuthenticationService.user.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,15 +1,17 @@
 package com.healthcareplatform.AuthenticationService.user;
 
-import com.healthcareplatform.AuthenticationService.dto.UserDTO;
+import com.healthcareplatform.AuthenticationService.dto.*;
+import com.healthcareplatform.AuthenticationService.userdetails.UserDetailsImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/user")
 public class UserController {
 
     @Autowired
@@ -52,7 +54,7 @@ public class UserController {
      * @return ResponseEntity containing created PatientDto, HTTP 201 status.
      */
     @PostMapping
-    public ResponseEntity<UserResponse> createPatient(@Valid @RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserRequest userRequest) {
         // Delegate to UserService to create a new patient
         UserResponse created = userService.createUser(userRequest);
 
@@ -60,18 +62,62 @@ public class UserController {
     }
 
     /**
-     * Update an existing patient's details.
+     * Updates the authenticated user's username.
      *
-     * @param userId Unique identifier of the patient (path variable)
-     * @param userRequest Payload containing updated data (validated request body)
-     * @return ResponseEntity containing updated PatientDto and HTTP 200 status.
+     * @param userDetails      the authenticated principal (current user context)
+     * @param updateUsername   DTO containing the new, validated username
+     * @return the updated {@link UserResponse} wrapped in a 200 OK
      */
-    @PutMapping("/{userId}")
-    public ResponseEntity<UserResponse> updatePatient(
-            @PathVariable Long userId,
-            @Valid @RequestBody UserRequest userRequest) {
+    @PutMapping("/profile/username")
+    public ResponseEntity<UserResponse> updateUsername(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                       @Valid @RequestBody UpdateUsername updateUsername) {
         // TODO Delegate to UserService to update user details
-        UserResponse updated = userService.updateUser(userId, userRequest);
+        UserResponse updated = userService.updateUsername(userDetails, updateUsername);
+        return ResponseEntity.ok(updated);
+    }
+
+    /**
+     * Updates the authenticated user's full name.
+     *
+     * @param userDetails      the authenticated principal (current user context)
+     * @param updateFullName   DTO containing the new, validated full name
+     * @return the updated {@link UserResponse} wrapped in a 200 OK
+     */
+    @PutMapping("/profile/full-name")
+    public ResponseEntity<UserResponse> updateFullName(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                       @Valid @RequestBody UpdateFullName updateFullName) {
+        // TODO Delegate to UserService to update user details
+        UserResponse updated = userService.updateFullName(userDetails, updateFullName);
+        return ResponseEntity.ok(updated);
+    }
+
+    /**
+     * Updates the authenticated user's email address.
+     *
+     * @param userDetails   the authenticated principal (current user context)
+     * @param updateEmail   DTO containing the new, validated email address
+     * @return the updated {@link UserResponse} wrapped in a 200 OK
+     */
+    @PutMapping("/profile/email")
+    public ResponseEntity<UserResponse> updateEmail(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                       @Valid @RequestBody UpdateEmail updateEmail) {
+        // TODO Delegate to UserService to update user details
+        UserResponse updated = userService.updateEmail(userDetails, updateEmail);
+        return ResponseEntity.ok(updated);
+    }
+
+    /**
+     * Changes the authenticated user's password.
+     *
+     * @param userDetails      the authenticated principal (current user context)
+     * @param updatePassword   DTO containing the new, validated password
+     * @return the updated {@link UserResponse} wrapped in a 200 OK
+     */
+    @PutMapping("/profile/password")
+    public ResponseEntity<UserResponse> updatePassword(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                       @Valid @RequestBody UpdatePassword updatePassword) {
+        // TODO Delegate to UserService to update user details
+        UserResponse updated = userService.updatePassword(userDetails, updatePassword);
         return ResponseEntity.ok(updated);
     }
 
