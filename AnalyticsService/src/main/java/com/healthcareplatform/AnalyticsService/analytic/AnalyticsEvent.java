@@ -1,7 +1,12 @@
-package com.healthcareplatform.AnalyticsService.model;
+package com.healthcareplatform.AnalyticsService.analytic;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -22,6 +27,10 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "analytics_events")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class AnalyticsEvent {
 
     @Id
@@ -32,40 +41,7 @@ public class AnalyticsEvent {
     private String eventType;
 
     @Column(name = "event_time", nullable = false)
-    private OffsetDateTime eventTime;
+    private LocalDateTime eventTime;
 
-    @Column(name = "data", nullable = false)
-    private String data;
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getEventType() {
-        return eventType;
-    }
-
-    public void setEventType(String eventType) {
-        this.eventType = eventType;
-    }
-
-    public OffsetDateTime getEventTime() {
-        return eventTime;
-    }
-
-    public void setEventTime(OffsetDateTime eventTime) {
-        this.eventTime = eventTime;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
 }

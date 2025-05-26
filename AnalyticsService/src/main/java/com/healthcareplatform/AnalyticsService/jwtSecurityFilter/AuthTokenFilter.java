@@ -1,7 +1,7 @@
-package com.healthcareplatform.AnalyticsService.security;
+package com.healthcareplatform.AnalyticsService.jwtSecurityFilter;
 
 import com.healthcareplatform.AnalyticsService.dto.UserDTO;
-import com.healthcareplatform.AnalyticsService.service.AuthenticationService;
+import com.healthcareplatform.AnalyticsService.authenticationClient.AuthenticationService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

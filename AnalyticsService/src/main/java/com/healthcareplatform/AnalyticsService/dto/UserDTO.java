@@ -1,7 +1,17 @@
 package com.healthcareplatform.AnalyticsService.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.List;
 
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO {
     private String username;
     private List<String> authorityNames;
@@ -10,12 +20,5 @@ public class UserDTO {
     private boolean credentialsNonExpired;
     private boolean accountNonLocked;
 
-    // Getters and setters
-    public String getUsername() { return username; }
-    public List<String> getAuthorityNames() { return authorityNames; }
-    public boolean isEnabled() { return enabled; }
-    public boolean isAccountNonExpired() { return accountNonExpired; }
-    public boolean isCredentialsNonExpired() { return credentialsNonExpired; }
-    public boolean isAccountNonLocked() { return accountNonLocked; }
 
 }

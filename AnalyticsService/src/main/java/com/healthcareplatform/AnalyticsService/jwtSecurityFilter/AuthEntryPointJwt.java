@@ -1,4 +1,4 @@
-package com.healthcareplatform.AnalyticsService.security;
+package com.healthcareplatform.AnalyticsService.jwtSecurityFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

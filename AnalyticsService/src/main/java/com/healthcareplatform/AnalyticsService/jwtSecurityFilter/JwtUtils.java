@@ -1,4 +1,4 @@
-package com.healthcareplatform.AnalyticsService.security;
+package com.healthcareplatform.AnalyticsService.jwtSecurityFilter;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;

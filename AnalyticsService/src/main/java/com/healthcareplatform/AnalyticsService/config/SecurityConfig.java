@@ -1,7 +1,7 @@
 package com.healthcareplatform.AnalyticsService.config;
 
-import com.healthcareplatform.AnalyticsService.security.AuthEntryPointJwt;
-import com.healthcareplatform.AnalyticsService.security.AuthTokenFilter;
+import com.healthcareplatform.AnalyticsService.jwtSecurityFilter.AuthEntryPointJwt;
+import com.healthcareplatform.AnalyticsService.jwtSecurityFilter.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,8 +1,7 @@
-package com.healthcareplatform.AnalyticsService.controller;
+package com.healthcareplatform.AnalyticsService.analytic;
 
-import com.healthcareplatform.AnalyticsService.dto.AnalyticsReportDto;
-import com.healthcareplatform.AnalyticsService.dto.AnalyticsRequestDto;
-import com.healthcareplatform.AnalyticsService.service.AnalyticsService;
+import com.healthcareplatform.AnalyticsService.dto.AnalyticsReportResponse;
+import com.healthcareplatform.AnalyticsService.dto.AnalyticsReportRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,42 +27,39 @@ public class AnalyticsController {
     /**
      * Retrieve a list of all analytics reports.
      *
-     * TODO: Delegate to AnalyticsService to fetch all reports
      *
-     * @return ResponseEntity containing a list of AnalyticsReportDto objects and HTTP 200 status.
+     * @return ResponseEntity containing a list of AnalyticsReportResponse objects and HTTP 200 status.
      */
     @GetMapping
-    public ResponseEntity<List<AnalyticsReportDto>> getAllReports() {
-        List<AnalyticsReportDto> reports = analyticsService.getAllReports();
+    public ResponseEntity<List<AnalyticsReportResponse>> getAllReports() {
+        List<AnalyticsReportResponse> reports = analyticsService.getAllReports();
         return ResponseEntity.ok(reports);
     }
 
     /**
      * Retrieve a specific analytics report by ID.
      *
-     * TODO: Delegate to AnalyticsService to fetch report by ID
      *
      * @param reportId Unique identifier of the report (path variable)
-     * @return ResponseEntity containing AnalyticsReportDto and HTTP 200 status if found;
+     * @return ResponseEntity containing AnalyticsReportResponse and HTTP 200 status if found;
      *         otherwise exception is propagated.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<AnalyticsReportDto> getReportById(@PathVariable UUID reportId) {
-        AnalyticsReportDto report = analyticsService.getReportById(reportId);
+    public ResponseEntity<AnalyticsReportResponse> getReportById(@PathVariable UUID reportId) {
+        AnalyticsReportResponse report = analyticsService.getReportById(reportId);
         return ResponseEntity.ok(report);
     }
 
     /**
      * Generate a new analytics report based on request criteria.
      *
-     * TODO: Delegate to AnalyticsService to create a new report
      *
      * @param request Payload containing report criteria (validated request body)
-     * @return ResponseEntity containing created AnalyticsReportDto and HTTP 201 status.
+     * @return ResponseEntity containing created AnalyticsReportResponse and HTTP 201 status.
      */
     @PostMapping
-    public ResponseEntity<AnalyticsReportDto> generateReport(@Valid @RequestBody AnalyticsRequestDto request) {
-        AnalyticsReportDto created = analyticsService.generateReport(request);
+    public ResponseEntity<List<AnalyticsReportResponse>> generateReport(@Valid @RequestBody AnalyticsReportRequest request) {
+        List<AnalyticsReportResponse> created = analyticsService.generateReport(request);
         return ResponseEntity.status(201).body(created);
     }
 }
