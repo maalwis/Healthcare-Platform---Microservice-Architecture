@@ -1,4 +1,4 @@
-package com.healthcareplatform.AuditLoggingService.security;
+package com.healthcareplatform.AuditLoggingService.jwtSecurityFilter;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;

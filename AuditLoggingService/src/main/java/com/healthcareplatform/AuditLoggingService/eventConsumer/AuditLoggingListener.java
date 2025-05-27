@@ -1,4 +1,4 @@
-package com.healthcareplatform.AuditLoggingService.consumer;
+package com.healthcareplatform.AuditLoggingService.eventConsumer;
 
 import com.healthcareplatform.AuditLoggingService.config.RabbitMQConfig;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;

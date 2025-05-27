@@ -1,7 +1,7 @@
-package com.healthcareplatform.AuditLoggingService.security;
+package com.healthcareplatform.AuditLoggingService.jwtSecurityFilter;
 
 import com.healthcareplatform.AuditLoggingService.dto.UserDTO;
-import com.healthcareplatform.AuditLoggingService.service.AuthenticationService;
+import com.healthcareplatform.AuditLoggingService.authenticationClient.AuthenticationService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

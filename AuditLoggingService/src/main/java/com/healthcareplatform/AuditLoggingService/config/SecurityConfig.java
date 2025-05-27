@@ -1,7 +1,7 @@
 package com.healthcareplatform.AuditLoggingService.config;
 
-import com.healthcareplatform.AuditLoggingService.security.AuthEntryPointJwt;
-import com.healthcareplatform.AuditLoggingService.security.AuthTokenFilter;
+import com.healthcareplatform.AuditLoggingService.jwtSecurityFilter.AuthEntryPointJwt;
+import com.healthcareplatform.AuditLoggingService.jwtSecurityFilter.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

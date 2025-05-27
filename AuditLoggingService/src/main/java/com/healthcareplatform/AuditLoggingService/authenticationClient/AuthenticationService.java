@@ -1,6 +1,5 @@
-package com.healthcareplatform.AuditLoggingService.service;
+package com.healthcareplatform.AuditLoggingService.authenticationClient;
 
-import com.healthcareplatform.AuditLoggingService.authenticationClient.AuthenticationClient;
 import com.healthcareplatform.AuditLoggingService.dto.UserDTO;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
