@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,13 +43,13 @@ public class AnalyticsService {
     /**
      * Retrieve a specific analytics report/event by its unique ID.
      *
-     * @param reportId UUID of the report to retrieve
+     * @param reportId Long of the report to retrieve
      * @return the corresponding AnalyticsReportResponse
      * @throws ResourceNotFoundException if no matching event is found
      * @throws DataAccessException       on DB errors
      */
     @Transactional(readOnly = true)
-    public AnalyticsReportResponse getReportById(UUID reportId) {
+    public AnalyticsReportResponse getReportById(Long reportId) {
         AnalyticsEvent event = analyticsRepository.findById(reportId)
                 .orElseThrow(() -> new ResourceNotFoundException("Report not found with ID: " + reportId));
         return mapToDto(event);

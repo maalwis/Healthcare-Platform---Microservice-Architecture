@@ -6,10 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
-
 
 /**
  * DTO representing a request to generate an analytics report.
@@ -23,7 +20,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnalyticsReportResponse {
-    private UUID id;
+    private Long id;
 
     @NotNull(message = "eventType must not be null")
     private String eventType;

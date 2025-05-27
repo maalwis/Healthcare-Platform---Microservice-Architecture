@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.util.UUID;
 
 
 @Getter
@@ -15,9 +13,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MedicationDispensedDto {
-    private UUID dispenseId;
-    private UUID prescriptionId;
-    private UUID patientId;
+    private Long dispenseId;
+    private Long prescriptionId;
+    private Long patientId;
     private String medicationName;
     private Integer quantityDispensed;
     private LocalDateTime createdAt;

@@ -9,16 +9,14 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.UUID;
-
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class InvoiceDto {
-    private UUID id;
-    private UUID patientId;
+    private Long id;
+    private Long patientId;
     private OffsetDateTime dateIssued;
     private BigDecimal totalAmount;
     private String status;

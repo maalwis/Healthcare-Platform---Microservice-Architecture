@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.util.UUID;
 
 
 @Getter
@@ -15,9 +13,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AppointmentDto {
-    private UUID id;
-    private UUID patientId;
-    private UUID doctorId;
+    private Long id;
+    private Long patientId;
+    private Long doctorId;
     private LocalDateTime scheduledTime;
     private Integer durationMinutes;
     private String status;

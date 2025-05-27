@@ -40,13 +40,14 @@ public class AnalyticsController {
      * Retrieve a specific analytics report by ID.
      *
      *
-     * @param reportId Unique identifier of the report (path variable)
+     * @param Id Unique identifier of the report (path variable)
      * @return ResponseEntity containing AnalyticsReportResponse and HTTP 200 status if found;
      *         otherwise exception is propagated.
      */
-    @GetMapping("/{id}")
-    public ResponseEntity<AnalyticsReportResponse> getReportById(@PathVariable UUID reportId) {
-        AnalyticsReportResponse report = analyticsService.getReportById(reportId);
+    @GetMapping("/{Id}")
+    public ResponseEntity<AnalyticsReportResponse> getReportById(@PathVariable Long Id) {
+
+        AnalyticsReportResponse report = analyticsService.getReportById(Id);
         return ResponseEntity.ok(report);
     }
 

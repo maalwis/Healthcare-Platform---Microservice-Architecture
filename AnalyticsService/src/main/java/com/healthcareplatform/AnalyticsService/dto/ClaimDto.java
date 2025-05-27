@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.util.UUID;
 
 
 @Getter
@@ -15,8 +13,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ClaimDto {
-    private UUID id;
-    private UUID invoiceId;
+    private Long id;
+    private Long invoiceId;
     private String insurer;
     private String claimStatus;
     private String details;

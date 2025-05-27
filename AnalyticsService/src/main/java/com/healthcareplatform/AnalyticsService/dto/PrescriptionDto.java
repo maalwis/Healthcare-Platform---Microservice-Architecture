@@ -7,7 +7,6 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.util.UUID;
 
 
 @Getter
@@ -15,9 +14,9 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PrescriptionDto {
-    private UUID id;
-    private UUID patientId;
-    private UUID doctorId;
+    private Long id;
+    private Long patientId;
+    private Long doctorId;
     private OffsetDateTime dateIssued;
     private String status;
     private String notes;

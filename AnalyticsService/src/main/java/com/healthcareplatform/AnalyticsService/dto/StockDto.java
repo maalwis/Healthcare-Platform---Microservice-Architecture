@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.util.UUID;
 
 
 @Getter
@@ -15,8 +13,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StockDto {
-    private UUID stockItemId;
-    private UUID productId;
+    private Long stockItemId;
+    private Long productId;
     private String productName;
     private Integer currentQuantity;
     private Integer threshold;

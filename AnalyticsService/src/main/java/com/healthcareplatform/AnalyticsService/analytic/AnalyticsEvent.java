@@ -35,7 +35,7 @@ public class AnalyticsEvent {
 
     @Id
     @GeneratedValue
-    private UUID id;
+    private Long id;
 
     @Column(name = "event_type", length = 100, nullable = false)
     private String eventType;
