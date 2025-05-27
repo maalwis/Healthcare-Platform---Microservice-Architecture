@@ -1,4 +1,4 @@
-package com.healthcareplatform.BillingClaimsService.security;
+package com.healthcareplatform.BillingClaimsService.jwtSecurityFilter;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;

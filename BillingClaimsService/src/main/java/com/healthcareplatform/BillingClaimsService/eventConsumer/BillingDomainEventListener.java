@@ -1,4 +1,4 @@
-package com.healthcareplatform.BillingClaimsService.messaging.consumer;
+package com.healthcareplatform.BillingClaimsService.eventConsumer;
 
 import com.healthcareplatform.BillingClaimsService.config.RabbitMQConfig;
 import com.healthcareplatform.BillingClaimsService.dto.AppointmentDto;

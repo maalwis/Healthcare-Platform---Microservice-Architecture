@@ -1,4 +1,4 @@
-package com.healthcareplatform.BillingClaimsService.security;
+package com.healthcareplatform.BillingClaimsService.jwtSecurityFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

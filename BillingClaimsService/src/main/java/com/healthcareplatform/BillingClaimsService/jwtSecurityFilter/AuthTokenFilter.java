@@ -1,7 +1,7 @@
-package com.healthcareplatform.BillingClaimsService.security;
+package com.healthcareplatform.BillingClaimsService.jwtSecurityFilter;
 
+import com.healthcareplatform.BillingClaimsService.authenticationClient.AuthenticationService;
 import com.healthcareplatform.BillingClaimsService.dto.UserDTO;
-import com.healthcareplatform.BillingClaimsService.service.AuthenticationService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

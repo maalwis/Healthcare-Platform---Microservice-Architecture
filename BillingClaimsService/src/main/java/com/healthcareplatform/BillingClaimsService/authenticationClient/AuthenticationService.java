@@ -1,6 +1,5 @@
-package com.healthcareplatform.BillingClaimsService.service;
+package com.healthcareplatform.BillingClaimsService.authenticationClient;
 
-import com.healthcareplatform.BillingClaimsService.authenticationClient.AuthenticationClient;
 import com.healthcareplatform.BillingClaimsService.dto.UserDTO;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;

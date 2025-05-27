@@ -1,7 +1,8 @@
 package com.healthcareplatform.BillingClaimsService.config;
 
-import com.healthcareplatform.BillingClaimsService.security.AuthEntryPointJwt;
-import com.healthcareplatform.BillingClaimsService.security.AuthTokenFilter;
+
+import com.healthcareplatform.BillingClaimsService.jwtSecurityFilter.AuthEntryPointJwt;
+import com.healthcareplatform.BillingClaimsService.jwtSecurityFilter.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
