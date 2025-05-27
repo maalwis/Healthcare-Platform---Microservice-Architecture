@@ -1,8 +1,8 @@
 package com.healthcareplatform.AppointmentService.config;
 
 
-import com.healthcareplatform.AppointmentService.security.AuthEntryPointJwt;
-import com.healthcareplatform.AppointmentService.security.AuthTokenFilter;
+import com.healthcareplatform.AppointmentService.jwtSecurityFilter.AuthEntryPointJwt;
+import com.healthcareplatform.AppointmentService.jwtSecurityFilter.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

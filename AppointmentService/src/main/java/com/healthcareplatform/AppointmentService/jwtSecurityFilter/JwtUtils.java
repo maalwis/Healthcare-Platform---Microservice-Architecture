@@ -1,4 +1,4 @@
-package com.healthcareplatform.AppointmentService.security;
+package com.healthcareplatform.AppointmentService.jwtSecurityFilter;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;

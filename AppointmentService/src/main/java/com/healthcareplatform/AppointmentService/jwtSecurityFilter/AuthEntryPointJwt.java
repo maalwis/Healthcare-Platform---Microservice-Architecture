@@ -1,4 +1,4 @@
-package com.healthcareplatform.AppointmentService.security;
+package com.healthcareplatform.AppointmentService.jwtSecurityFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

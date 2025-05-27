@@ -1,8 +1,8 @@
-package com.healthcareplatform.AppointmentService.security;
+package com.healthcareplatform.AppointmentService.jwtSecurityFilter;
 
 
 import com.healthcareplatform.AppointmentService.dto.UserDTO;
-import com.healthcareplatform.AppointmentService.service.AuthenticationService;
+import com.healthcareplatform.AppointmentService.authenticationClient.AuthenticationService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

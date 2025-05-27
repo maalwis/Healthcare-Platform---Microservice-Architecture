@@ -1,8 +1,7 @@
-package com.healthcareplatform.AppointmentService.service;
+package com.healthcareplatform.AppointmentService.authenticationClient;
 
 
 
-import com.healthcareplatform.AppointmentService.authenticationClient.AuthenticationClient;
 import com.healthcareplatform.AppointmentService.dto.UserDTO;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
