@@ -1,10 +1,9 @@
-package com.healthcareplatform.PatientService.service;
+package com.healthcareplatform.PatientService.patient;
 
-import com.healthcareplatform.PatientService.dto.PatientDto;
+import com.healthcareplatform.PatientService.dto.PatientRequest;
+import com.healthcareplatform.PatientService.dto.PatientResponse;
 import com.healthcareplatform.PatientService.exception.ResourceNotFoundException;
-import com.healthcareplatform.PatientService.messaging.publisher.PatientEventPublisher;
-import com.healthcareplatform.PatientService.model.Patient;
-import com.healthcareplatform.PatientService.repository.PatientRepository;
+import com.healthcareplatform.PatientService.eventPublisher.PatientEventPublisher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -15,11 +14,11 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.ConcurrentModificationException;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
+
 
 
 /**
@@ -48,7 +47,7 @@ public class PatientService {
     /**
      * Constructor injection of PatientRepository.
      *
-     * @param patientRepository Spring Data JPA repository for Patient entity operations
+     * @param patientRepository     Spring Data JPA repository for Patient entity operations
      * @param patientEventPublisher Publisher to emit events after patient creation or patient update
      */
     public PatientService(PatientRepository patientRepository,
@@ -62,14 +61,14 @@ public class PatientService {
      * <p>
      * Runs within a read-only transaction for performance optimization.
      *
-     * @return List of PatientDto objects representing all patients
+     * @return List of PatientResponse objects representing all patients
      * @throws DataAccessException if a database access error occurs
      */
     @Transactional(readOnly = true)
-    public List<PatientDto> getAllPatients() {
+    public List<PatientResponse> getAllPatients() {
         // fetch all Patient entities
         List<Patient> patients = patientRepository.findAll();
-        // map each Patient entity to PatientDto and collect in a list
+        // map each Patient entity to PatientResponse and collect in a list
         return patients.stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
@@ -82,12 +81,12 @@ public class PatientService {
      * if no matching patient is found.
      *
      * @param id UUID of the patient to retrieve
-     * @return PatientDto representing the found patient
+     * @return PatientResponse representing the found patient
      * @throws ResourceNotFoundException if patient with given id does not exist
-     * @throws DataAccessException if a database access error occurs
+     * @throws DataAccessException       if a database access error occurs
      */
     @Transactional(readOnly = true)
-    public PatientDto getPatientById(UUID id) {
+    public PatientResponse getPatientById(Long id) {
         // attempt to find the Patient entity by ID
         Patient patient = patientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient not found with id: " + id));
@@ -99,24 +98,25 @@ public class PatientService {
      * Create a new patient record in the database.
      * <p>
      * Runs within a read-write transaction. On success, the persisted
-     * Patient entity is converted to PatientDto and returned.
+     * Patient entity is converted to PatientResponse and returned.
      *
-     * @param patientDto PatientDto containing data for the new patient
-     * @return PatientDto of the newly created patient (includes generated UUID)
+     * @param patientRequest PatientResponse containing data for the new patient
+     * @return PatientResponse of the newly created patient (includes generated UUID)
      * @throws DataIntegrityViolationException if validation or constraints fail
-     * @throws DataAccessException if a database access error occurs
+     * @throws DataAccessException             if a database access error occurs
      */
-    public PatientDto createPatient(PatientDto patientDto) {
+    public PatientResponse createPatient(PatientRequest patientRequest) {
         // map DTO to a new Patient entity
-        Patient patient = mapToEntity(patientDto);
+        Patient patient = mapPatientCreateResponseToEntity(patientRequest);
         // set creation Time
-        patient.setCreatedAt(OffsetDateTime.now());
-        // generate a new UUID for the new patient record
-        patient.setId(UUID.randomUUID());
+        patient.setCreatedAt(LocalDateTime.now());
+
         // save entity to the database (transactional)
         Patient saved = patientRepository.save(patient);
+
         // Publish event for downstream systems (RabbitMQ)
         patientEventPublisher.publishPatientRegistered(mapToDto(saved));
+
         // convert saved entity back to DTO and return
         return mapToDto(saved);
     }
@@ -127,25 +127,44 @@ public class PatientService {
      * Runs within a read-write transaction. Fetches the existing entity,
      * applies changes, and saves the updated entity.
      *
-     * @param id  UUID of the patient to update
-     * @param patientDto PatientDto containing updated data
-     * @return PatientDto of the updated patient
-     * @throws ResourceNotFoundException if patient with given id does not exist
+     * @param id             UUID of the patient to update
+     * @param patientRequest PatientResponse containing updated data
+     * @return PatientResponse of the updated patient
+     * @throws ResourceNotFoundException         if patient with given id does not exist
      * @throws OptimisticLockingFailureException if concurrent modification detected
-     * @throws DataAccessException if a database access error occurs
+     * @throws DataAccessException               if a database access error occurs
      */
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED)
-    public PatientDto updatePatient(UUID id, PatientDto patientDto) {
+    public PatientResponse updatePatient(Long id, PatientRequest patientRequest) {
         // fetch existing patient or throw if not found
         Patient existing = patientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Patient not found with id: " + id));
-        // update entity fields from DTO
-        // TODO: update entity fields from DTO
+
+        // TODO : there is better way to do this.
         try {
-            // Implementation: save updated entity (commit at transaction end)
+            if (patientRequest.getFirstName() != null) {
+                existing.setFirstName(patientRequest.getFirstName());
+            }
+            if (patientRequest.getLastName() != null) {
+                existing.setLastName(patientRequest.getLastName());
+            }
+            if (patientRequest.getDateOfBirth() != null) {
+                existing.setDateOfBirth(patientRequest.getDateOfBirth());
+            }
+            if (patientRequest.getGender() != null) {
+                existing.setGender(patientRequest.getGender());
+            }
+            if (patientRequest.getContactInfo() != null) {
+                existing.setContactInfo(patientRequest.getContactInfo());
+            }
+
             Patient updated = patientRepository.save(existing);
-            // Implementation: map updated entity to DTO and return
+
+
+            patientEventPublisher.publishPatientUpdated(mapToDto(updated));
+
             return mapToDto(updated);
+
         } catch (ObjectOptimisticLockingFailureException e) {
             // Implementation: handle optimistic locking failure for concurrent updates
             throw new ConcurrentModificationException(
@@ -160,9 +179,9 @@ public class PatientService {
      *
      * @param patientId UUID of the patient to delete
      * @throws ResourceNotFoundException if patient with given patientId does not exist
-     * @throws DataAccessException if a database access error occurs
+     * @throws DataAccessException       if a database access error occurs
      */
-    public void deletePatient(UUID patientId) {
+    public void deletePatient(Long patientId) {
         // verify existence to provide clear error if absent
         if (!patientRepository.existsById(patientId)) {
             throw new ResourceNotFoundException("Patient not found with id: " + patientId);
@@ -171,9 +190,9 @@ public class PatientService {
         patientRepository.deleteById(patientId);
     }
 
-    // Helper method to map Patient entity to PatientDto
-    private PatientDto mapToDto(Patient patient) {
-        PatientDto dto = new PatientDto();
+    // Helper method to map Patient entity to PatientResponse
+    private PatientResponse mapToDto(Patient patient) {
+        PatientResponse dto = new PatientResponse();
         dto.setId(patient.getId());
         dto.setFirstName(patient.getFirstName());
         dto.setLastName(patient.getLastName());
@@ -184,8 +203,8 @@ public class PatientService {
         return dto;
     }
 
-    // Helper method to map PatientDto to Patient entity
-    private Patient mapToEntity(PatientDto dto) {
+    // Helper method to map PatientResponse to Patient entity
+    private Patient mapPatientCreateResponseToEntity(PatientRequest dto) {
         Patient patient = new Patient();
         // set fields from DTO; ID is generated in createPatient
         patient.setFirstName(dto.getFirstName());
@@ -193,9 +212,10 @@ public class PatientService {
         patient.setDateOfBirth(dto.getDateOfBirth());
         patient.setGender(dto.getGender());
         patient.setContactInfo(dto.getContactInfo());
-        patient.setMetadata(dto.getMetadata());
         return patient;
     }
+
+
 }
 
 

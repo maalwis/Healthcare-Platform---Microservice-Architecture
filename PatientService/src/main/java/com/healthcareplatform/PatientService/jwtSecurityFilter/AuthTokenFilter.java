@@ -1,7 +1,7 @@
-package com.healthcareplatform.PatientService.security;
+package com.healthcareplatform.PatientService.jwtSecurityFilter;
 
 import com.healthcareplatform.PatientService.dto.UserDTO;
-import com.healthcareplatform.PatientService.service.AuthenticationService;
+import com.healthcareplatform.PatientService.authenticationClient.AuthenticationService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

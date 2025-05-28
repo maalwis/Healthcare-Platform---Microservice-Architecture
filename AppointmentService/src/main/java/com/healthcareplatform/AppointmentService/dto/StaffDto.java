@@ -1,4 +1,4 @@
 package com.healthcareplatform.AppointmentService.dto;
 
-public class StaffAvailabilityDto {
+public class StaffDto {
 }

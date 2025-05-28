@@ -1,4 +1,4 @@
-package com.healthcareplatform.PatientService.dto;
+package com.healthcareplatform.PatientService.exception;
 
 import java.time.Instant;
 

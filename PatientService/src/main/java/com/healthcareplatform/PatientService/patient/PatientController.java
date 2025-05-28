@@ -1,7 +1,7 @@
-package com.healthcareplatform.PatientService.controller;
+package com.healthcareplatform.PatientService.patient;
 
-import com.healthcareplatform.PatientService.dto.PatientDto;
-import com.healthcareplatform.PatientService.service.PatientService;
+import com.healthcareplatform.PatientService.dto.PatientRequest;
+import com.healthcareplatform.PatientService.dto.PatientResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,26 +24,26 @@ public class PatientController {
     /**
      * Retrieve a list of all patients.
 
-     * @return ResponseEntity containing a list of PatientDto objects and HTTP 200 status.
+     * @return ResponseEntity containing a list of PatientResponse objects and HTTP 200 status.
      */
     @GetMapping
-    public ResponseEntity<List<PatientDto>> getAllPatients() {
+    public ResponseEntity<List<PatientResponse>> getAllPatients() {
         // Delegate to PatientService to retrieve all patients
-        List<PatientDto> patients = patientService.getAllPatients();
+        List<PatientResponse> patients = patientService.getAllPatients();
         return ResponseEntity.ok(patients);
     }
 
     /**
      * Retrieve details for a specific patient by ID.
      *
-     * @param patientId Unique identifier of the patient (path variable)
-     * @return ResponseEntity containing PatientDto and HTTP 200 status if found;
+     * @param Id Unique identifier of the patient (path variable)
+     * @return ResponseEntity containing PatientResponse and HTTP 200 status if found;
      *         otherwise exception is propagated (e.g., 404 Not Found).
      */
     @GetMapping("/{id}")
-    public ResponseEntity<PatientDto> getPatientById(@PathVariable UUID patientId) {
+    public ResponseEntity<PatientResponse> getPatientById(@PathVariable Long Id) {
         // TODO: Delegate to PatientService to fetch patient by ID
-        PatientDto patient = patientService.getPatientById(patientId);
+        PatientResponse patient = patientService.getPatientById(Id);
         return ResponseEntity.ok(patient);
     }
 
@@ -51,12 +51,12 @@ public class PatientController {
      * Create a new patient record.
      *
      * @param patient Payload containing patient data (validated request body)
-     * @return ResponseEntity containing created PatientDto, HTTP 201 status.
+     * @return ResponseEntity containing created PatientResponse, HTTP 201 status.
      */
     @PostMapping
-    public ResponseEntity<PatientDto> createPatient(@Valid @RequestBody PatientDto patient) {
+    public ResponseEntity<PatientResponse> createPatient(@Valid @RequestBody PatientRequest patient) {
         // Delegate to PatientService to create a new patient
-        PatientDto created = patientService.createPatient(patient);
+        PatientResponse created = patientService.createPatient(patient);
 
         return ResponseEntity.ok(created);
     }
@@ -64,29 +64,29 @@ public class PatientController {
     /**
      * Update an existing patient's details.
      *
-     * @param patientId Unique identifier of the patient (path variable)
-     * @param patientDto Payload containing updated data (validated request body)
-     * @return ResponseEntity containing updated PatientDto and HTTP 200 status.
+     * @param Id Unique identifier of the patient (path variable)
+     * @param patientRequest Payload containing updated data (validated request body)
+     * @return ResponseEntity containing updated PatientResponse and HTTP 200 status.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<PatientDto> updatePatient(
-            @PathVariable UUID patientId,
-            @Valid @RequestBody PatientDto patientDto) {
+    public ResponseEntity<PatientResponse> updatePatient(
+            @PathVariable Long Id,
+            @Valid @RequestBody PatientRequest patientRequest) {
         // Delegate to PatientService to update patient details
-        PatientDto updated = patientService.updatePatient(patientId, patientDto);
+        PatientResponse updated = patientService.updatePatient(Id, patientRequest);
         return ResponseEntity.ok(updated);
     }
 
     /**
      * Delete a patient record by ID.
 
-     * @param patientId Unique identifier of the patient (path variable)
+     * @param Id Unique identifier of the patient (path variable)
      * @return ResponseEntity with HTTP 204 No Content on successful deletion.
      */
     @DeleteMapping("/{patientId}")
-    public ResponseEntity<Void> deletePatient(@PathVariable UUID patientId) {
+    public ResponseEntity<Void> deletePatient(@PathVariable Long Id) {
         // Delegate to PatientService to delete patient
-        patientService.deletePatient(patientId);
+        patientService.deletePatient(Id);
         return ResponseEntity.noContent().build();
     }
 }

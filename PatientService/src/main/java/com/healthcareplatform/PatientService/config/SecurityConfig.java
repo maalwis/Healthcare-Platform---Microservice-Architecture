@@ -1,7 +1,7 @@
 package com.healthcareplatform.PatientService.config;
 
-import com.healthcareplatform.PatientService.security.AuthEntryPointJwt;
-import com.healthcareplatform.PatientService.security.AuthTokenFilter;
+import com.healthcareplatform.PatientService.jwtSecurityFilter.AuthEntryPointJwt;
+import com.healthcareplatform.PatientService.jwtSecurityFilter.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,6 +1,5 @@
-package com.healthcareplatform.PatientService.service;
+package com.healthcareplatform.PatientService.authenticationClient;
 
-import com.healthcareplatform.PatientService.authenticationClient.AuthenticationClient;
 import com.healthcareplatform.PatientService.dto.UserDTO;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;

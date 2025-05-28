@@ -1,6 +1,5 @@
 package com.healthcareplatform.PatientService.exception;
 
-import com.healthcareplatform.PatientService.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;

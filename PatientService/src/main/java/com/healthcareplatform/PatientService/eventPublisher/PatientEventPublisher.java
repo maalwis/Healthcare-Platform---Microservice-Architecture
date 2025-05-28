@@ -1,7 +1,7 @@
-package com.healthcareplatform.PatientService.messaging.publisher;
+package com.healthcareplatform.PatientService.eventPublisher;
 
 import com.healthcareplatform.PatientService.config.RabbitMQConfig;
-import com.healthcareplatform.PatientService.dto.PatientDto;
+import com.healthcareplatform.PatientService.dto.PatientResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +19,14 @@ public class PatientEventPublisher {
     /**
      * Publish PatientRegistered event after successful registration.
      */
-    public void publishPatientRegistered(PatientDto patient) {
+    public void publishPatientRegistered(PatientResponse patient) {
         rabbitTemplate.convertAndSend(RabbitMQConfig.PATIENT_REGISTERED_QUEUE, patient);
     }
 
     /**
      * Publish PatientUpdated event after profile update.
      */
-    public void publishPatientUpdated(PatientDto patient) {
+    public void publishPatientUpdated(PatientResponse patient) {
         rabbitTemplate.convertAndSend(RabbitMQConfig.PATIENT_UPDATED_QUEUE, patient);
     }
 }
