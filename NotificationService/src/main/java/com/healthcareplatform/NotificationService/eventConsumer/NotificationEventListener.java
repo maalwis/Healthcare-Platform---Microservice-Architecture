@@ -1,4 +1,4 @@
-package com.healthcareplatform.NotificationService.messaging.consumer;
+package com.healthcareplatform.NotificationService.eventConsumer;
 
 import com.healthcareplatform.NotificationService.config.RabbitMQConfig;
 import com.healthcareplatform.NotificationService.dto.AppointmentDto;

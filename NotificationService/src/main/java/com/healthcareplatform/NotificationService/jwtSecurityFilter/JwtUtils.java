@@ -1,4 +1,4 @@
-package com.healthcareplatform.NotificationService.security;
+package com.healthcareplatform.NotificationService.jwtSecurityFilter;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;

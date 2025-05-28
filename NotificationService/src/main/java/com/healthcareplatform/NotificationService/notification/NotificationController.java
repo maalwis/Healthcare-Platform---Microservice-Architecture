@@ -1,7 +1,6 @@
-package com.healthcareplatform.NotificationService.controller;
+package com.healthcareplatform.NotificationService.notification;
 
 import com.healthcareplatform.NotificationService.dto.NotificationDto;
-import com.healthcareplatform.NotificationService.service.NotificationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

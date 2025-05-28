@@ -1,7 +1,7 @@
-package com.healthcareplatform.NotificationService.security;
+package com.healthcareplatform.NotificationService.jwtSecurityFilter;
 
 import com.healthcareplatform.NotificationService.dto.UserDTO;
-import com.healthcareplatform.NotificationService.service.AuthenticationService;
+import com.healthcareplatform.NotificationService.authenticationClient.AuthenticationService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

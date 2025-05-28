@@ -1,4 +1,4 @@
-package com.healthcareplatform.NotificationService.security;
+package com.healthcareplatform.NotificationService.jwtSecurityFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

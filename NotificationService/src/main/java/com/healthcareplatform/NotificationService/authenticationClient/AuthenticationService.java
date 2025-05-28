@@ -1,7 +1,6 @@
-package com.healthcareplatform.NotificationService.service;
+package com.healthcareplatform.NotificationService.authenticationClient;
 
 
-import com.healthcareplatform.NotificationService.authenticationClient.AuthenticationClient;
 import com.healthcareplatform.NotificationService.dto.UserDTO;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.healthcareplatform.NotificationService.service;
+package com.healthcareplatform.NotificationService.notification;
 
 import com.healthcareplatform.NotificationService.dto.NotificationDto;
 import jakarta.validation.Valid;

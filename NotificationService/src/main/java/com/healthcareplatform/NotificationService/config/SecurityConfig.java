@@ -1,7 +1,7 @@
 package com.healthcareplatform.NotificationService.config;
 
-import com.healthcareplatform.NotificationService.security.AuthEntryPointJwt;
-import com.healthcareplatform.NotificationService.security.AuthTokenFilter;
+import com.healthcareplatform.NotificationService.jwtSecurityFilter.AuthEntryPointJwt;
+import com.healthcareplatform.NotificationService.jwtSecurityFilter.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
