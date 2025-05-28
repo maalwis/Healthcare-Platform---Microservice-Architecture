@@ -1,8 +1,8 @@
-package com.healthcareplatform.InventoryService.controller;
+package com.healthcareplatform.InventoryService.inventory;
 
-import com.healthcareplatform.InventoryService.dto.InventoryDto;
-import com.healthcareplatform.InventoryService.dto.ReorderRequestDto;
-import com.healthcareplatform.InventoryService.service.InventoryService;
+import com.healthcareplatform.InventoryService.dto.InventoryRequest;
+import com.healthcareplatform.InventoryService.dto.InventoryResponse;
+import com.healthcareplatform.InventoryService.dto.ReorderInventoryRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,8 +33,8 @@ public class InventoryController {
      * @return ResponseEntity containing a list of InventoryDto objects and HTTP 200 status.
      */
     @GetMapping
-    public ResponseEntity<List<InventoryDto>> getAllItems() {
-        List<InventoryDto> items = inventoryService.getAllItems();
+    public ResponseEntity<List<InventoryResponse>> getAllItems() {
+        List<InventoryResponse> items = inventoryService.getAllItems();
         return ResponseEntity.ok(items);
     }
 
@@ -48,8 +48,8 @@ public class InventoryController {
      *         otherwise exception is propagated.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<InventoryDto> getItemById(@PathVariable UUID itemId) {
-        InventoryDto item = inventoryService.getItemById(itemId);
+    public ResponseEntity<InventoryResponse> getItemById(@PathVariable Long itemId) {
+        InventoryResponse item = inventoryService.getItemById(itemId);
         return ResponseEntity.ok(item);
     }
 
@@ -62,8 +62,8 @@ public class InventoryController {
      * @return ResponseEntity containing created InventoryDto and HTTP 201 status.
      */
     @PostMapping
-    public ResponseEntity<InventoryDto> addItem(@Valid @RequestBody InventoryDto item) {
-        InventoryDto created = inventoryService.addItem(item);
+    public ResponseEntity<InventoryResponse> addItem(@Valid @RequestBody InventoryRequest item) {
+        InventoryResponse created = inventoryService.addItem(item);
         return ResponseEntity.status(201).body(created);
     }
 
@@ -73,14 +73,14 @@ public class InventoryController {
      * TODO: Delegate to InventoryService to update item details
      *
      * @param itemId Unique identifier of the inventory item (path variable)
-     * @param itemDto Payload containing updated data (validated request body)
+     * @param inventoryRequest Payload containing updated data (validated request body)
      * @return ResponseEntity containing updated InventoryDto and HTTP 200 status.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<InventoryDto> updateItem(
-            @PathVariable UUID itemId,
-            @Valid @RequestBody InventoryDto itemDto) {
-        InventoryDto updated = inventoryService.updateItem(itemId, itemDto);
+    public ResponseEntity<InventoryResponse> updateItem(
+            @PathVariable Long itemId,
+            @Valid @RequestBody InventoryRequest inventoryRequest) {
+        InventoryResponse updated = inventoryService.updateItem(itemId, inventoryRequest);
         return ResponseEntity.ok(updated);
     }
 
@@ -95,8 +95,8 @@ public class InventoryController {
      */
     @PostMapping("/{id}/reorder")
     public ResponseEntity<Void> reorderItem(
-            @PathVariable UUID itemId,
-            @Valid @RequestBody ReorderRequestDto reorderRequest) {
+            @PathVariable Long itemId,
+            @Valid @RequestBody ReorderInventoryRequest reorderRequest) {
         inventoryService.reorderItem(itemId, reorderRequest);
         return ResponseEntity.accepted().build();
     }

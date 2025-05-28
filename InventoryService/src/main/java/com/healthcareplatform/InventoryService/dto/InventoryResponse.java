@@ -1,4 +1,4 @@
 package com.healthcareplatform.InventoryService.dto;
 
-public class ReorderRequestDto {
+public class InventoryResponse {
 }

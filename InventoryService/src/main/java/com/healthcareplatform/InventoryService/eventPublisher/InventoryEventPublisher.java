@@ -1,7 +1,7 @@
-package com.healthcareplatform.InventoryService.messaging.publisher;
+package com.healthcareplatform.InventoryService.eventPublisher;
 
 import com.healthcareplatform.InventoryService.config.RabbitMQConfig;
-import com.healthcareplatform.InventoryService.dto.InventoryDto;
+import com.healthcareplatform.InventoryService.dto.InventoryResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
@@ -16,14 +16,14 @@ public class InventoryEventPublisher {
     /**
      * Publish Stock Low event any item’s stock level drops below its reorder threshold.
      */
-    public void publishStockLow(InventoryDto inventory) {
+    public void publishStockLow(InventoryResponse inventory) {
         rabbitTemplate.convertAndSend(RabbitMQConfig.STOCK_LOW_QUEUE, inventory);
     }
 
     /**
      * Publish Once a replenishment order arrives and inventory is restocked.
      */
-    public void publishStockReplenished(InventoryDto inventory) {
+    public void publishStockReplenished(InventoryResponse inventory) {
         rabbitTemplate.convertAndSend(RabbitMQConfig.STOCK_REPLENISHED_QUEUE, inventory);
     }
 

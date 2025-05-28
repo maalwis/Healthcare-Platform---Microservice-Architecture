@@ -1,4 +1,4 @@
-package com.healthcareplatform.InventoryService.security;
+package com.healthcareplatform.InventoryService.jwtSecurityFilter;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;

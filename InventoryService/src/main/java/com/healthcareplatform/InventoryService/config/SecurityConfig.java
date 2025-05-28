@@ -1,7 +1,7 @@
 package com.healthcareplatform.InventoryService.config;
 
-import com.healthcareplatform.InventoryService.security.AuthEntryPointJwt;
-import com.healthcareplatform.InventoryService.security.AuthTokenFilter;
+import com.healthcareplatform.InventoryService.jwtSecurityFilter.AuthEntryPointJwt;
+import com.healthcareplatform.InventoryService.jwtSecurityFilter.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

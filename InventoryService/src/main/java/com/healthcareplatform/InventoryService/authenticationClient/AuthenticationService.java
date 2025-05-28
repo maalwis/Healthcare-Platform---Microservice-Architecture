@@ -1,6 +1,5 @@
-package com.healthcareplatform.InventoryService.service;
+package com.healthcareplatform.InventoryService.authenticationClient;
 
-import com.healthcareplatform.InventoryService.authenticationClient.AuthenticationClient;
 import com.healthcareplatform.InventoryService.dto.UserDTO;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;

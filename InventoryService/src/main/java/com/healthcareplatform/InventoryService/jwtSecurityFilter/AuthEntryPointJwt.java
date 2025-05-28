@@ -1,4 +1,4 @@
-package com.healthcareplatform.InventoryService.security;
+package com.healthcareplatform.InventoryService.jwtSecurityFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

@@ -1,4 +1,4 @@
-package com.healthcareplatform.InventoryService.messaging.consumer;
+package com.healthcareplatform.InventoryService.eventConsumer;
 
 import com.healthcareplatform.InventoryService.config.RabbitMQConfig;
 import com.healthcareplatform.InventoryService.dto.MedicationDispensedEvent;

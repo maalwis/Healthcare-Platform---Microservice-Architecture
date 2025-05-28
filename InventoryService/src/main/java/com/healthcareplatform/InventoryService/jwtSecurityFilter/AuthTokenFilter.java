@@ -1,7 +1,7 @@
-package com.healthcareplatform.InventoryService.security;
+package com.healthcareplatform.InventoryService.jwtSecurityFilter;
 
 import com.healthcareplatform.InventoryService.dto.UserDTO;
-import com.healthcareplatform.InventoryService.service.AuthenticationService;
+import com.healthcareplatform.InventoryService.authenticationClient.AuthenticationService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
