@@ -2,7 +2,7 @@ package com.healthcareplatform.PharmacyService.messaging.publisher;
 
 import com.healthcareplatform.PharmacyService.config.RabbitMQConfig;
 import com.healthcareplatform.PharmacyService.dto.MedicationDispensedEvent;
-import com.healthcareplatform.PharmacyService.dto.PrescriptionDto;
+import com.healthcareplatform.PharmacyService.dto.PrescriptionResponse;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public class PharmacyEventPublisher {
     /**
      * Publish PrescriptionFilled event after prescription is prepared.
      */
-    public void publishPrescriptionFilled(PrescriptionDto prescription) {
+    public void publishPrescriptionFilled(PrescriptionResponse prescription) {
         rabbitTemplate.convertAndSend(RabbitMQConfig.PRESCRIPTION_FILLED_QUEUE, prescription);
     }
 

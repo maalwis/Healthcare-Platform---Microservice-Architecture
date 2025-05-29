@@ -1,4 +1,4 @@
-package com.healthcareplatform.PharmacyService.security;
+package com.healthcareplatform.PharmacyService.jwtSecurityFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
